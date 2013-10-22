@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <span class="label {{ get_color_from_timedelta(ass_instance.deadline) }}">
+            {%- if is_dead(ass_instance.deadline) -%}
+                已截止于：
+            {%- else -%}
+                截止日期：
+            {%- endif -%}
+            {{ format_date(ass_instance.deadline) }}
+        </span>
+        <h2>
+            {{ ass_instance.name }}
+            <small>
+                {{ ass_instance.teacher.name }}
+                <a href="mailto:{{ ass_instance.teacher.email }}">
+                    {{ ass_instance.teacher.email }}
+                </a>
+            </small>
+        </h2>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            作业描述
+        </div>
+        <div class="panel-body">
+            {{ ass_instance.descriptions }}
+        </div>
+    </div>
+    <hr />
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            上传作业
+        </div>
+        <div class="panel-body">
+            上传框stub
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            讨论区
+        </div>
+        <div class="panel-body">
+            讨论区stub
+        </div>
+    </div>
+
+</div>
+{% endblock %}
