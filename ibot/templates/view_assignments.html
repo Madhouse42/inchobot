@@ -6,6 +6,7 @@
     <tr>
         <th>名称</th>
         <th>教师姓名</th>
+        <th>状态</th>
         <th>截止日期</th>
         <th>资料链接</th>
     </tr>
@@ -13,12 +14,17 @@
     <tr>
         <td><a href="{{ url_for('view_assignment_instance', _id=item._id) }}">{{ item.name }}</a></td>
         <td>{{ item.teacher.name }}</td>
-        <td>{%- if is_dead(item.deadline) -%}
-                <span class="label label-danger">已截止</span>
-            {%- else -%}
-                <span class="label label-primary">还剩{{ get_rest_days(item.deadline) }}天</span>
-            {%- endif -%}&nbsp;
-            <span class="label {{ get_color_from_timedelta(item.deadline) }}">{{ item.deadline }}</span>
+        <td>
+            <span class="label {{ get_color_from_timedelta(item.deadline) }}">
+                {%- if is_dead(item.deadline) -%}
+                    已截止
+                {%- else -%}
+                    还剩{{ get_rest_days(item.deadline) }}天
+                {%- endif -%}
+            </span>
+        </td>
+        <td>
+            <span>{{ item.deadline }}</span>
         </td>
         <td><a href="{{ item.files_url }}">{{ item.files_url }}</a></td>
     </tr>

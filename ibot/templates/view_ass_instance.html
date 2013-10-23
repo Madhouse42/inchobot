@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% macro dead_or_alive(inst) %}
+    {%- if is_dead(ass_instance.deadline) -%}
+        panel-default
+    {%- else -%}
+        panel-primary
+    {%- endif -%}
+{% endmacro %}
+
 {% block content %}
 <div class="container">
     <div class="page-header">
@@ -21,7 +29,7 @@
             </small>
         </h2>
     </div>
-    <div class="panel panel-primary">
+    <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             作业描述
         </div>
@@ -29,8 +37,7 @@
             {{ ass_instance.descriptions }}
         </div>
     </div>
-    <hr />
-    <div class="panel panel-primary">
+    <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             上传作业
         </div>
@@ -38,14 +45,27 @@
             上传框stub
         </div>
     </div>
-    <div class="panel panel-primary">
+    <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             讨论区
         </div>
         <div class="panel-body">
-            讨论区stub
+            回复控件stub
+        </div>
+        <div class="list-group">
+            {% for item in ass_instance.discussions() %}
+                <a class="list-group-item" href="#">
+                    <h5 class="list-group-item-heading">
+                        <small class="list-group-item-text">{{ item.date }},&nbsp;{{ item.user.username }}&nbsp;说</small>
+                        <br />
+                        {{ item.discussion }}
+                    </h5>
+                </a>
+            {% endfor %}
+
         </div>
     </div>
 
 </div>
 {% endblock %}
+

@@ -12,7 +12,7 @@ def init_db(_=None):
 @app.route('/view_asses')
 def view_assignments():
     asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
-    app.jinja_env.globals.update(assignments=asses)
+    app.jinja_env.globals.update(assignments=asses[:7])
 
     return render_template('view_assignments.html',
                            assignments=asses)
