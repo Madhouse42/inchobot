@@ -44,28 +44,37 @@ class Assignment(db.Model):
 
     def append_discussion(self, discussion_text,
                           user_id, date=datetime.date.today()):
-        try:
-            new_disc = Discussion(discussion_text, user_id=user_id, date=date)
-            db.session.add(new_disc)
-            db.session.commit()
-        except IntegrityError as err:
-            print err
-            new_disc = Discussion('Error inserting item.')
-            db.session.rollback()
+        success, error_str = True, ''
+        if discussion_text:
+            try:
+                new_disc = Discussion(discussion_text, user_id=user_id, date=date)
+                db.session.add(new_disc)
+                db.session.commit()
+            except IntegrityError:
+                new_disc = Discussion('Error inserting item.')
+                db.session.rollback()
+                success = False
+                error_str = u'虽然不可能不过出现了完整性错误'
 
-        if self.first_discussion_id == 0:
-            self.first_discussion_id = self.last_discussion_id = new_disc._id
+            if self.first_discussion_id == 0:
+                self.first_discussion_id = self.last_discussion_id = new_disc._id
+            else:
+                disc = Discussion.query.filter(
+                            Discussion._id == self.last_discussion_id
+                ).first()
+                disc.next_id = new_disc._id
+                self.last_discussion_id = new_disc._id
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                success = False
+                error_str = u'integrity error'
         else:
-            disc = Discussion.query.filter(
-                        Discussion._id == self.last_discussion_id
-            ).first()
-            disc.next_id = new_disc._id
-            self.last_discussion_id = new_disc._id
-        try:
-            db.session.commit()
-        except IntegrityError as err:
-            print err
-            db.session.rollback()
+            success = False
+            error_str = 'discussion cannot be left blank'
+
+        return success, error_str
 
 
     def discussions(self):

@@ -35,6 +35,12 @@
         </div>
         <div class="panel-body">
             {{ ass_instance.descriptions }}
+            {% if is_dead(ass_instance.deadline) %}
+                <button class="btn btn-info btn-sm pull-right"
+                        onclick="append_ass()">
+                    创建补交作业项目
+                </button>
+            {% endif %}
         </div>
     </div>
     <div class="panel {{ dead_or_alive(ass_instance) }}">
@@ -50,13 +56,43 @@
             讨论区
         </div>
         <div class="panel-body">
-            回复控件stub
+            <div class="container">
+            <form class="form-horizontal" role="form"
+                  id="discussion-form">
+                <div class="form-group">
+                    <label class="control-label"
+                           for="discussion-area">
+                        Speak Thy Mind
+                    </label>
+                    <textarea class="form-control"
+                              rows="3"
+                              id="discussion-area"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit"
+                            class="btn btn-default"
+                            id="discussion-submit">
+                        发送
+                    </button>
+                </div>
+            </form>
+            </div>
         </div>
         <div class="list-group">
             {% for item in ass_instance.discussions() %}
                 <a class="list-group-item" href="#">
                     <h5 class="list-group-item-heading">
-                        <small class="list-group-item-text">{{ item.date }},&nbsp;{{ item.user.username }}&nbsp;说</small>
+                        <small class="list-group-item-text">
+                            {{ item.date }},&nbsp;
+                            {{ item.user.username }}&nbsp;说
+                            {% if global_user._id == item.user._id %}
+                                <button class="btn btn-danger pull-right"
+                                        id="btn-delete-disc-{{ item._id }}"
+                                        onclick="delete_disc({{ item._id }})">
+                                    删除
+                                </button>
+                            {% endif %}
+                        </small>
                         <br />
                         {{ item.discussion }}
                     </h5>
@@ -67,5 +103,32 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $('#discussion-submit').click(function () {
+            $.post('/append_disc', {
+                ass_id: {{ ass_instance._id }},
+                disc: $('#discussion-area').val(),
+                user_id: {{ global_user._id }},
+                date: $.now()
+            }).done(function (data) {
+                        location.reload();
+            });
+        });
+        var delete_disc = function (id) {
+            $.post('/delete_disc', {
+                disc_id: id,
+                ass_id: {{ ass_instance._id }}
+            }).done(function (data) {
+                        location.reload();
+            });
+        };
+        var append_ass = function () {
+            console.log('not implemented');
+        };
+    </script>
 {% endblock %}
 
