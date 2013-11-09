@@ -48,7 +48,25 @@
             上传作业
         </div>
         <div class="panel-body">
-            上传框stub
+            <form id="form" enctype="multipart/form-data" method="post" action="upload">
+                <div style="position:relative;">
+                    <a class='btn btn-primary' href='javascript:;'>
+                        Choose File...
+                        <input type="file" name="file" id="fileToUpload" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='fileSelected();'>
+                    </a>
+                </div>
+                &nbsp;
+                <div class="alert alert-info">
+                    <div id="fileName">FileName: </div>
+                    <div id="fileSize">FileSize: </div>
+                    <div id="fileType">FileType: </div>
+                </div>
+                <p>Progress: </p>
+                <div class="progress">
+                    <div class="progress-bar" style="width: 10%;"></div>
+                </div>
+                <button type="button" class="btn btn-primary" value="Upload" onclick="uploadFile()">Upload</button>
+            </form>
         </div>
     </div>
     <div class="panel {{ dead_or_alive(ass_instance) }}">
@@ -107,6 +125,7 @@
 
 {% block scripts %}
     {{ super() }}
+    <script type="text/javascript" src="/static/javascripts/upload.js"> </script>
     <script type="text/javascript">
         $('#discussion-submit').click(function () {
             $.post('/append_disc', {
