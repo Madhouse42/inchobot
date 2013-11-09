@@ -6,9 +6,9 @@ function fileSelected() {
       fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
     else
       fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
-    document.getElementById('fileName').innerHTML = '文件名: ' + file.name;
-    document.getElementById('fileSize').innerHTML = '大小: ' + fileSize;
-    document.getElementById('fileType').innerHTML = '类型: ' + file.type;
+    document.getElementById('fileName').innerHTML = 'FileName: ' + file.name;
+    document.getElementById('fileSize').innerHTML = 'FileSize: ' + fileSize;
+    document.getElementById('fileType').innerHTML = 'FileType:' + file.type;
     }
 }
 
