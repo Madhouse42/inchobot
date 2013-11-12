@@ -110,6 +110,10 @@ def append_discussion():
         return jsonify({'status': 'failed',
                         'error': u'invalid assignment id'})
 
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files['file']
+    return u'上传成功';
 
 if __name__ == '__main__':
     app.run(debug=True)

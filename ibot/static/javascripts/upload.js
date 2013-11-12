@@ -9,6 +9,7 @@ function fileSelected() {
     document.getElementById('fileName').innerHTML = 'FileName: ' + file.name;
     document.getElementById('fileSize').innerHTML = 'FileSize: ' + fileSize;
     document.getElementById('fileType').innerHTML = 'FileType:' + file.type;
+    setProcess('0');
     }
 }
 
@@ -20,14 +21,14 @@ function uploadFile() {
   xhr.addEventListener("load", uploadComplete, false);
   xhr.addEventListener("error", uploadFailed, false);
   xhr.addEventListener("abort", uploadCanceled, false);
-  xhr.open("POST", "upload", true);
+  xhr.open("POST", "/upload", true);
   xhr.send(fd);
 }
 
 function uploadProgress(evt) {
   if(evt.lengthComputable) {
     var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-    document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+    setProcess(percentComplete.toString());
   }
   else {
     document.getElementById('progressNumber').innerHTML = 'unable to compute';
@@ -35,6 +36,7 @@ function uploadProgress(evt) {
 }
 
 function uploadComplete(evt) {
+  setProcess('100');
   alert(evt.target.responseText);
 }
 
@@ -44,4 +46,12 @@ function uploadFailed(evt) {
 
 function uploadCanceled(evt) {
   alert("The upload has been canceled by the user or the browser dropped the connection.");
+}
+
+function setProcess(percent)
+{
+    document.getElementById('processPercent').innerHTML = 'Progress: ' + percent + '%';
+    document.getElementById('progressNumber').innerHTML =
+        '<div class="progress-bar" align = "middle" style="width: ' +
+        percent + '%;">' + '</div>';
 }
