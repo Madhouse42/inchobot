@@ -13,9 +13,10 @@ function fileSelected() {
     }
 }
 
-function uploadFile() {
+function uploadFile(whichAss) {
   var fd = new FormData();
   fd.append("file", document.getElementById('fileToUpload').files[0]);
+  fd.append('whichAss', whichAss);
   var xhr = new XMLHttpRequest();
   xhr.upload.addEventListener("progress", uploadProgress, false);
   xhr.addEventListener("load", uploadComplete, false);

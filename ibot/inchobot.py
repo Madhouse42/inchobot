@@ -1,6 +1,8 @@
 # encoding: utf-8
 import datetime
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, make_response
+from werkzeug.utils import secure_filename
+import os
 from ibot import *
 
 
@@ -13,6 +15,9 @@ def init_db(_=None):
         app.jinja_env.globals.update({
             'global_user': User.query.filter(User._id == 2).first()
         })
+        resp = make_response(render_template('login.html'))
+        resp.set_cookie('userId', '2')
+        return resp
 
 
 @app.route('/')
@@ -113,7 +118,22 @@ def append_discussion():
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files['file']
-    return u'上传成功';
+    user_id = request.cookies.get('userId')
+    assignmentID = request.form['whichAss']
+    fileSubmitName = f.filename
+    #check filename here
+    fileNewName = 'xxx'
+    filePath = './upload/' + assignmentID + '/';
+    if Assignment.query.filter(Assignment._id == assignmentID):
+        if os.path.exists(filePath):
+            pass
+        else:
+            os.makedirs(filePath)
+        f.save(os.path.join(filePath, fileNewName))
+        #insert into database here
+    else:
+        return 'invalid assignment id'
+    return 'upload succeed' + ' your ID:' + user_id + ' your FileName' + fileSubmitName;
 
 if __name__ == '__main__':
     app.run(debug=True)
