@@ -9,24 +9,28 @@ from ibot import *
 def init_db(_=None):
     """initialize database"""
     db.create_all()
-
+"""
     if app.debug:
         session['userID'] = '2'
 
     app.jinja_env.globals.update({
             'global_user': User.query.filter(User._id == session['userID']).first()
         })
-
+"""
 
 
 @app.route('/')
 @app.route('/view_asses')
 def view_assignments():
     asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
-    app.jinja_env.globals.update(assignments=asses[:7])   # what's this mean?
+    #app.jinja_env.globals.update(assignments=asses[:7])   # what's this mean?
 
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        global_user = None
     return render_template('view_assignments.html',
-                           assignments=asses)
+                           assignments=asses, global_user=global_user)
 
 
 @app.route('/search_result', methods=['GET'])
@@ -35,14 +39,25 @@ def view_search_result():
     asses = Assignment.query.filter(Assignment.name.like('%%%s%%' % keyword))\
                                         .order_by(Assignment.deadline.desc())
 
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        global_user = None
+
     return render_template('view_assignments.html',
-                           assignments=asses)
+                           assignments=asses, global_user=global_user)
 
 
 @app.route('/view_asses/<int:_id>')
 def view_assignment_instance(_id):
     ass = Assignment.query.filter(Assignment._id == _id).first()
-    return render_template('view_ass_instance.html', ass_instance=ass)
+
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        global_user = None
+
+    return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
 
 
 @app.route('/donate')
@@ -159,6 +174,28 @@ def thisUserData():
         taskNames.append((ass, task))
 
     return render_template('thisUserData.html', thisUser = thisUser, taskNames = taskNames)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/checkLogin', methods=['POST'])
+def checkLogin():
+    #print request.form
+    userName = request.form['userName']
+    password = request.form['password']
+    thisUser = User.query.filter(User.student_id == userName and User.password == password).first()
+    if thisUser is not None:
+        session['userID'] = thisUser._id
+        return 'login Succeed'
+        #return render_template('loginSucceed.html', userName = thisUser.username)
+    else:
+        return 'login failed'
+
+@app.route('/logout')
+def logOut():
+    session.pop('userID', None)
+    return 'logout succeed'
 
 if __name__ == '__main__':
     app.run(debug=True)
