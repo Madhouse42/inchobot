@@ -37,7 +37,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ url_for('view_donate') }}">捐助</a></li>
                 {% if global_user %}
-                    <li><a href="#">{{ global_user.username }}已登入</a></li>
+                    <li><a href="/thisUserData">{{ global_user.username }}已登入</a></li>
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->

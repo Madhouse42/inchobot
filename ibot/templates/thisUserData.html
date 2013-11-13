@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>user ID: {{ thisUser._id }}</h3>
+<h3>user student id: {{ thisUser.student_id }}</h3>
+<h3>user name: {{ thisUser.username }}
+<h3>user submit: </h3>
+{% for (ass, task)  in taskNames %}
+    <h3>task id: {{ ass.name }}
+        file name: {{ task.file_submit_name }}
+        # add submit time here
+    </h3>
+{% endfor %}
+
+{% endblock %}

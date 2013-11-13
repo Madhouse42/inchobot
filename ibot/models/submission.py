@@ -21,7 +21,7 @@ class Submission(db.Model):
                                           'assignment_id',
                                           name='submission_unique_constraint'),)
 
-    def __init__(self, student_id, assignment_id, files_url, file_submit_name, file_real_name, file_new_name):
+    def __init__(self, student_id, assignment_id, files_url, file_submit_name, file_new_name):
         self.student_id = student_id
         self.assignment_id = assignment_id
         self.files_url = files_url

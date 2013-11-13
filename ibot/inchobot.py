@@ -1,7 +1,6 @@
 # encoding: utf-8
 import datetime
-from flask import render_template, request, jsonify, make_response
-from werkzeug.utils import secure_filename
+from flask import render_template, request, jsonify, make_response, session
 import os
 from ibot import *
 
@@ -12,19 +11,19 @@ def init_db(_=None):
     db.create_all()
 
     if app.debug:
-        app.jinja_env.globals.update({
-            'global_user': User.query.filter(User._id == 2).first()
+        session['userID'] = '2'
+
+    app.jinja_env.globals.update({
+            'global_user': User.query.filter(User._id == session['userID']).first()
         })
-        resp = make_response(render_template('login.html'))
-        resp.set_cookie('userId', '2')
-        return resp
+
 
 
 @app.route('/')
 @app.route('/view_asses')
 def view_assignments():
     asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
-    app.jinja_env.globals.update(assignments=asses[:7])
+    app.jinja_env.globals.update(assignments=asses[:7])   # what's this mean?
 
     return render_template('view_assignments.html',
                            assignments=asses)
@@ -118,22 +117,48 @@ def append_discussion():
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files['file']
-    user_id = request.cookies.get('userId')
+    user_id = session['userID']
     assignmentID = request.form['whichAss']
     fileSubmitName = f.filename
+    fileExtend = fileSubmitName.split('.')[-1];
     #check filename here
-    fileNewName = 'xxx'
-    filePath = './upload/' + assignmentID + '/';
-    if Assignment.query.filter(Assignment._id == assignmentID):
-        if os.path.exists(filePath):
-            pass
-        else:
-            os.makedirs(filePath)
-        f.save(os.path.join(filePath, fileNewName))
-        #insert into database here
+    thisUser = User.query.filter(User._id == user_id).first()
+    thisTask = Assignment.query.filter(Assignment._id == assignmentID).first()
+    fileNewName = thisUser.student_id + '_' + thisUser.username + '_' + thisTask.name + '.' + fileExtend
+
+    filePath = './upload/' + thisTask.name + '/'
+
+    if os.path.exists(filePath):
+        pass
     else:
-        return 'invalid assignment id'
-    return 'upload succeed' + ' your ID:' + user_id + ' your FileName' + fileSubmitName;
+        os.makedirs(filePath)
+    f.save(os.path.join(filePath, fileNewName))
+
+    lastSubmit = Submission.query.filter(Submission.student_id == thisUser._id and Submission.assignment_id == thisTask._id).first()
+
+    if lastSubmit is not None:
+        db.delete(lastSubmit)
+    else:
+        newUpload = Submission(thisUser._id, thisTask._id, filePath, fileSubmitName, fileNewName)
+        db.session.add(newUpload)
+    db.session.commit()
+    #insert into database here
+
+    #tasks = Submission.query.filter(Submission.student_id == thisUser._id).all()
+    #print tasks
+
+    return   u'文件：' + fileSubmitName + u'上传成功'
+
+@app.route('/thisUserData')
+def thisUserData():
+    thisUser = User.query.filter(User._id == session['userID']).first()
+    tasks = Submission.query.filter(Submission.student_id == session['userID']).all()
+    taskNames = []
+    for task in tasks:
+        ass = Assignment.query.filter(Assignment._id == task._id).first()
+        taskNames.append((ass, task))
+
+    return render_template('thisUserData.html', thisUser = thisUser, taskNames = taskNames)
 
 if __name__ == '__main__':
     app.run(debug=True)

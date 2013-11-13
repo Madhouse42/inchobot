@@ -2,7 +2,7 @@
 import datetime
 from sqlalchemy.exc import IntegrityError
 
-from ibot import db, User, Discussion, Teacher, Assignment
+from ibot import db, User, Discussion, Teacher, Assignment, Submission
 
 
 def run():
