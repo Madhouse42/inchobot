@@ -29,8 +29,11 @@ def view_assignments():
         global_user = User.query.filter(User._id == session['userID']).first()
     except KeyError:
         global_user = None
-    return render_template('view_assignments.html',
+    if global_user:
+        return render_template('view_assignments.html',
                            assignments=asses, global_user=global_user)
+    else:
+        return render_template('base.html')
 
 
 @app.route('/search_result', methods=['GET'])
@@ -44,8 +47,11 @@ def view_search_result():
     except KeyError:
         global_user = None
 
-    return render_template('view_assignments.html',
+    if global_user:
+        return render_template('view_assignments.html',
                            assignments=asses, global_user=global_user)
+    else:
+        return render_template('base.html')
 
 
 @app.route('/view_asses/<int:_id>')
@@ -57,16 +63,27 @@ def view_assignment_instance(_id):
     except KeyError:
         global_user = None
 
-    return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
-
+    if global_user:
+        return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
+    else:
+        return render_template('base.html')
 
 @app.route('/donate')
 def view_donate():
-    return render_template('donate.html')
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+    return render_template('donate.html', global_user=global_user)
 
 
 @app.route('/delete_disc', methods=['POST'])
 def delete_discussion():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+
     disc_id = int(request.form['disc_id'])
     ass_id = int(request.form['ass_id'])
 
@@ -109,6 +126,11 @@ def delete_discussion():
 
 @app.route('/append_disc', methods=['POST'])
 def append_discussion():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+
     ass_id = request.form['ass_id']
     discussion_text = request.form['disc']
     user_id = request.form['user_id']
@@ -131,6 +153,11 @@ def append_discussion():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+
     f = request.files['file']
     user_id = session['userID']
     assignmentID = request.form['whichAss']
@@ -166,6 +193,11 @@ def upload():
 
 @app.route('/thisUserData')
 def thisUserData():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+
     thisUser = User.query.filter(User._id == session['userID']).first()
     tasks = Submission.query.filter(Submission.student_id == session['userID']).all()
     taskNames = []
@@ -173,7 +205,7 @@ def thisUserData():
         ass = Assignment.query.filter(Assignment._id == task._id).first()
         taskNames.append((ass, task))
 
-    return render_template('thisUserData.html', thisUser = thisUser, taskNames = taskNames)
+    return render_template('thisUserData.html', thisUser = thisUser, taskNames = taskNames, global_user = global_user)
 
 @app.route('/login')
 def login():
@@ -188,7 +220,6 @@ def checkLogin():
     if thisUser is not None:
         session['userID'] = thisUser._id
         return 'login Succeed'
-        #return render_template('loginSucceed.html', userName = thisUser.username)
     else:
         return 'login failed'
 
@@ -196,6 +227,27 @@ def checkLogin():
 def logOut():
     session.pop('userID', None)
     return 'logout succeed'
+
+@app.route('/signUp')
+def signUp():
+    return render_template('signUp.html')
+
+@app.route('/checkSignUp', methods=['POST'])
+def checkSignUp():
+    studentName = request.form['studentName']
+    studentID = request.form['studentID']
+    password = request.form['password']
+    email = request.form['email']
+    #check input here
+    thisUser = User.query.filter(User.student_id == studentID).first();
+    if thisUser is not None:
+        db.session.delete(thisUser)
+        db.session.commit()
+    newUser = User(studentName, password, studentID, email)
+    db.session.add(newUser)
+    db.session.commit()
+    session['userID'] = newUser._id
+    return 'signUp succeed'
 
 if __name__ == '__main__':
     app.run(debug=True)
