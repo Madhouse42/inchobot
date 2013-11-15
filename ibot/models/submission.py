@@ -14,6 +14,9 @@ class Submission(db.Model):
     files_url = db.Column(db.String)
     date = db.Column(db.Date)
 
+    user = db.relationship('User',
+                           primaryjoin='Submission.student_id == User._id',
+                           backref=db.backref('submissions', order_by='Submission.date'))
     assignment_obj = db.relationship('Assignment',
                                      primaryjoin='Assignment._id == '
                                                  'Submission.assignment_id',

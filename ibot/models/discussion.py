@@ -13,7 +13,7 @@ class Discussion(db.Model):
     assignment_id = db.Column(db.Integer, db.ForeignKey('assignment._id'))
     user = db.relationship('User',
                            primaryjoin='Discussion.user_id == User._id',
-                           backref='posts')
+                           backref='discussions')
     assignment = db.relationship('Assignment',
                                  primaryjoin='Discussion.assignment_id == Assignment._id',
                                  backref=db.backref('discussions', order_by='Discussion.date'))
