@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action = '/submitAddAssignment' method="post">
+<form method="post">
     <div>
         <label>作业名称</label>
         <input type="text" name="name">
@@ -16,7 +16,7 @@
     </div>
     <div>
         <label>期限</label>
-        <input type="text" name="year">
+        <input type="text" name="deadline">
     </div>
     <button type="submit">Submit</button>
 </form>

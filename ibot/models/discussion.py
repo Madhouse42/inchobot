@@ -20,6 +20,6 @@ class Discussion(db.Model):
 
     def __init__(self, discussion, user_id, date=datetime.date.today()):
         self.discussion = discussion
-        self.date = date
+        self.date = date  # change date type here
         self.user_id = user_id
 

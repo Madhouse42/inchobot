@@ -1,5 +1,6 @@
 # encoding: utf-8
 from ibot import db
+import datetime
 
 
 class Submission(db.Model):
@@ -11,6 +12,7 @@ class Submission(db.Model):
     file_submit_name = db.Column(db.String)
     file_new_name = db.Column(db.String)
     files_url = db.Column(db.String)
+    date = db.Column(db.Date)
 
     assignment_obj = db.relationship('Assignment',
                                      primaryjoin='Assignment._id == '
@@ -20,11 +22,11 @@ class Submission(db.Model):
                                           'assignment_id',
                                           name='submission_unique_constraint'),)
 
-    def __init__(self, student_id, assignment_id, files_url, file_submit_name, file_new_name):
+    def __init__(self, student_id, assignment_id, files_url, file_submit_name, file_new_name, date=datetime.date.today()):
         self.student_id = student_id
         self.assignment_id = assignment_id
         self.files_url = files_url
         self.file_submit_name = file_submit_name
-        #self.file_real_name = file_real_name
         self.file_new_name = file_new_name
+        self.date = date  # change date type here
 

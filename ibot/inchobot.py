@@ -209,25 +209,40 @@ def thisUserData():
 
     return render_template('thisUserData.html', taskNames = taskNames, global_user = global_user)
 
-
-@app.route('/addAssignment')
+@app.route('/addAssignment', methods=['POST', 'GET'])
 def addAssignment():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect('/')
 
-    return render_template('addAssignment.html', global_user = global_user)
+    if request.method == 'GET':
+        return render_template('addAssignment.html', global_user=global_user)
 
-@app.route('/submitAddAssignment', methods=['POST'])
-def submitAssignment():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+    # insert assignment into database here
+    name = request.form.get('name')
+    description = request.form.get('description')
+    file_url = request.form.get('fileURL')
+    deadline = request.form.get('deadline')  # check deadline format here
+    new_ass = Assignment(name, global_user._id, file_url, description)
+    db.session.add(new_ass)
+    db.session.commit()
+    return 'succeed<br /><a href="/">返回</a>'
 
-    print request.form
-    return 's'
+@app.route('/delete_assignment', methods=['POST'])
+def delete_assignment():
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect('/')
+
+    ass_id = request.form.get('assignment_id')
+    ass = Assignment.query.filter(Assignment._id == ass_id).first()
+    if not ass:
+        return 'failed'
+    if ass.user != global_user:
+        return 'failed'
+    db.session.delete(ass)
+    db.session.commit()
+    return 'succeed'
 
 if __name__ == '__main__':
     app.run(debug=True)

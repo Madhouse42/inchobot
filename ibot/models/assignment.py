@@ -16,14 +16,15 @@ class Assignment(db.Model):
     deadline = db.Column(db.Date)
     files_url = db.Column(db.String)
     descriptions = db.Column(db.String)
+    submit_date = db.Column(db.Date)
 
     user = db.relationship('User', primaryjoin='Assignment.user_id == User._id', backref='assignments')
 
-    def __init__(self, name, user_id,
-                 deadline, files_url, descriptions):
+    def __init__(self, name, user_id, files_url, descriptions, deadline=datetime.date.today(), date=datetime.date.today()):
         self.name = name
         self.user_id = user_id
-        self.deadline = deadline
+        self.deadline = deadline  # change date type here
         self.files_url = files_url
         self.descriptions = descriptions
+        self.submit_date = date  # change date type here
 

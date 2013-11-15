@@ -19,19 +19,19 @@ def run():
 
     ass1 = Assignment(u'信息隐藏实验3',
                       teacher._id,
-                      datetime.date(2013, 10, 18),
                       'http://pan.baidu.com/example1',
-                      'description1')
+                      'description1',
+                      datetime.date(2013, 10, 18))
     ass2 = Assignment(u'信息隐藏实验4',
                       teacher._id,
-                      datetime.date(2013, 10, 25),
                       'http://pan.baidu.com/example2',
-                      'description2')
+                      'description2',
+                      datetime.date(2013, 10, 25))
     ass3 = Assignment(u'软件安全实验3',
                       teacher._id,
-                      datetime.date(2013, 10, 20),
                       'http://pan.baidu.com/example3',
-                      'description3')
+                      'description3',
+                      datetime.date(2013, 10, 20))
 
     ass1.discussions = [Discussion('fuck', student._id, datetime.date(2013, 10, 22)),
                         Discussion('fuck two', student._id, datetime.date(2013, 10, 23)),

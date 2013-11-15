@@ -3,12 +3,12 @@
 {% block content %}
 <h3>user ID: {{ global_user._id }}</h3>
 <h3>user student id: {{ global_user.student_id }}</h3>
-<h3>user name: {{ global_user.username }}
+<h3>user name: {{ global_user.studentTeacherName }}
 <h3>user submit: </h3>
 {% for (ass, task)  in taskNames %}
     <h3>task id: {{ ass.name }}
         file name: {{ task.file_submit_name }}
-        # add submit time here
+        提交时间：{{ task.date }}
     </h3>
 {% endfor %}
 </h3>

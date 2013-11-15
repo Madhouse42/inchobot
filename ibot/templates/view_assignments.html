@@ -9,6 +9,7 @@
         <th>状态</th>
         <th>截止日期</th>
         <th>资料链接</th>
+        <th></th>
     </tr>
     {% for item in assignments %}
     <tr>
@@ -27,8 +28,28 @@
             <span>{{ item.deadline }}</span>
         </td>
         <td><a href="{{ item.files_url }}">{{ item.files_url }}</a></td>
+        <td>
+            {% if global_user._id == item.user._id %}
+                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="delete_assignment({{ item._id }})">
+                          删除
+                </button>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
     </table>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        var delete_assignment = function (id) {
+            $.post('/delete_assignment', {
+                assignment_id: id
+            }).done(function (data) {
+                        location.reload();
+            });
+        };
+    </script>
 {% endblock %}
