@@ -174,7 +174,7 @@ def upload():
     #check filename here
     thisUser = User.query.filter(User._id == user_id).first()
     thisTask = Assignment.query.filter(Assignment._id == assignmentID).first()
-    fileNewName = thisUser.student_id + '_' + thisUser.username + '_' + thisTask.name + '.' + fileExtend
+    fileNewName = thisUser.studentID + '_' + thisUser.studentTeacherName + '_' + thisTask.name + '.' + fileExtend
 
     filePath = './upload/' + thisTask.name + '/'
 
@@ -208,7 +208,6 @@ def thisUserData():
         taskNames.append((ass, task))
 
     return render_template('thisUserData.html', taskNames = taskNames, global_user = global_user)
-
 
 
 @app.route('/addAssignment')

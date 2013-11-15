@@ -4,3 +4,4 @@
 ibot/upload/*
 server.py
 tst_db.py
+test.py
