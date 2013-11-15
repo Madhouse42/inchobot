@@ -4,7 +4,7 @@
     <title>signUp</title>
 </head>
 <body>
-       <form action="/checkSignUp" method="post">
+       <form method="post">
       <div>
         <label>学号</label>
         <input type="text" name="studentID" placeholder="Enter student ID">
@@ -21,7 +21,11 @@
         <label>Email</label>
         <input type="text"  name="email" placeholder="Email">
       </div>
-
+      <div>
+          <input type="radio" name="type" value="teacher" />teacher
+          <br />
+          <input type="radio" name="type" value="student" checked="checked" />student
+      </div>
       <button type="submit">Submit</button>
     </form>
 </body>

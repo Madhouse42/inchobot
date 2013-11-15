@@ -22,10 +22,13 @@
         <h2>
             {{ ass_instance.name }}
             <small>
-                {{ ass_instance.teacher.name }}
-                <a href="mailto:{{ ass_instance.teacher.email }}">
-                    {{ ass_instance.teacher.email }}
+                {{ ass_instance.user.studentTeacherName }} 资料链接：
+                <a href="{{ ass_instance.files_url }}">
+                    {{ ass_instance.files_url }}
                 </a>
+                 教辅邮箱： <a href="mailto: {{ ass_instance.user.email }}">
+                           {{ ass_instance.user.email }}
+                 </a>
             </small>
         </h2>
     </div>
@@ -97,7 +100,7 @@
             </div>
         </div>
         <div class="list-group">
-            {% for item in ass_instance.discussions() %}
+            {% for item in ass_instance.discussions %}
                 <a class="list-group-item" href="#">
                     <h5 class="list-group-item-heading">
                         <small class="list-group-item-text">
@@ -130,9 +133,7 @@
         $('#discussion-submit').click(function () {
             $.post('/append_disc', {
                 ass_id: {{ ass_instance._id }},
-                disc: $('#discussion-area').val(),
-                user_id: {{ global_user._id }},
-                date: $.now()
+                disc: $('#discussion-area').val()
             }).done(function (data) {
                         location.reload();
             });

@@ -2,48 +2,43 @@
 import datetime
 from sqlalchemy.exc import IntegrityError
 
-from ibot import db, User, Discussion, Teacher, Assignment, Submission
-
+from ibot import db, User, Assignment, Discussion
 
 def run():
     db.create_all()
+    kami = User('', 'kami', '', '', 0)
+    db.session.add(kami)
 
-    almighty_god = User('kami', 'Mein Name ist Gott.')
-    wo = User('wo', 'wo', '2010302530073')
-    zero_discussion = Discussion('Illegal discussion number.',
-                                 user_id=almighty_god._id)
-    teacher = Teacher(u'信息隐藏教辅', 'example@example.com')
-    sw_teacher = Teacher(u'软件安全实验教辅', 'example@example.com')
-    try:
-        db.session.add(wo)
-        db.session.add(almighty_god)
-        db.session.add(teacher)
-        db.session.add(sw_teacher)
-        db.session.commit()
-    except IntegrityError as  err:
-        print err
-        db.session.rollback()
+    student = User('2011320530046', 'su', '123', '1', 2)
+    db.session.add(student)
+
+    teacher = User(u'信息安全教辅', u'信息安全教辅', '123', '2', 1)
+    db.session.add(teacher)
+
+    db.session.commit()
 
     ass1 = Assignment(u'信息隐藏实验3',
                       teacher._id,
-                      almighty_god._id,
                       datetime.date(2013, 10, 18),
                       'http://pan.baidu.com/example1',
                       'description1')
     ass2 = Assignment(u'信息隐藏实验4',
                       teacher._id,
-                      wo._id,
                       datetime.date(2013, 10, 25),
                       'http://pan.baidu.com/example2',
                       'description2')
     ass3 = Assignment(u'软件安全实验3',
-                      sw_teacher._id,
-                      wo._id,
+                      teacher._id,
                       datetime.date(2013, 10, 20),
                       'http://pan.baidu.com/example3',
                       'description3')
+
+    ass1.discussions = [Discussion('fuck', student._id, datetime.date(2013, 10, 22)),
+                        Discussion('fuck two', student._id, datetime.date(2013, 10, 23)),
+                        Discussion('oh', student._id, datetime.date(2013, 10, 24))]
+    ass3.discussions = [Discussion('woshi', student._id, datetime.date(2013, 10, 24))]
+
     try:
-        db.session.add(zero_discussion)
         db.session.add(ass1)
         db.session.add(ass2)
         db.session.add(ass3)
@@ -51,18 +46,6 @@ def run():
     except IntegrityError as err:
         print err
         db.session.rollback()
-
-
-    ass1.append_discussion('discussion text1', wo._id,
-                           datetime.date(2013, 10, 22))
-    ass1.append_discussion('discussion text2', wo._id,
-                           datetime.date(2013, 10, 23))
-    ass1.append_discussion('discussion text3', wo._id,
-                           datetime.date(2013, 10, 24))
-
-    ass3.append_discussion('another discussion text3', wo._id,
-                           datetime.date(2013, 10, 24))
-
 
 
 if __name__ == '__main__':

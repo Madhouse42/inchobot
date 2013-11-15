@@ -16,7 +16,6 @@ db = SQLAlchemy(app)
 
 
 from models.user import User
-from models.teacher import Teacher
 from models.discussion import Discussion
 from models.assignment import Assignment
 from models.submission import Submission

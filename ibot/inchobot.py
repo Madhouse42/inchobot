@@ -1,6 +1,7 @@
 # encoding: utf-8
 import datetime
-from flask import render_template, request, jsonify, make_response, session
+from flask import render_template, request, jsonify, session, redirect
+from sqlalchemy.sql.expression import and_
 import os
 from ibot import *
 
@@ -9,43 +10,73 @@ from ibot import *
 def init_db(_=None):
     """initialize database"""
     db.create_all()
-"""
-    if app.debug:
-        session['userID'] = '2'
-
-    app.jinja_env.globals.update({
-            'global_user': User.query.filter(User._id == session['userID']).first()
-        })
-"""
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
+def rootPage():
+    thisUser = User.query.filter(User._id == session.get('userID')).first()
+    if not thisUser:
+        return redirect('/signIn')
+    return render_template('base.html', global_user = thisUser)
+
+
+@app.route('/signIn', methods=['POST', 'GET'])
+def signIn():
+    if not request.form:
+        return render_template('signIn.html')
+
+    studentID = request.form['studentID']
+    password = request.form['password']
+
+    thisUser = User.query.filter(and_(User.studentID == studentID, User.password == password)).first()
+    if thisUser is not None:
+        session['userID'] = thisUser._id
+        return 'login Succeed<br /><a href="/">返回</a>'
+    else:
+        return 'login failed<br /><a href="/">返回</a>'
+
+
+@app.route('/signUp', methods=['POST', 'GET'])
+def signUp():
+    print request.form
+    if not request.form:
+        return render_template('signUp.html')
+
+    studentName = request.form['studentName']
+    studentID = request.form['studentID']
+    password = request.form['password']
+    email = request.form['email']
+    type = request.form.get('type', 'student')
+    if type == 'teacher':
+        type = 1
+    else:
+        type = 2
+    #check input here
+    thisUser = User.query.filter(User.studentID == studentID).first()
+    if thisUser is not None:
+        return 'signUp filed, this username has existed<br /><a href="/">返回</a>'
+
+    thisUser = User.query.filter(User.email == email).first()
+    if thisUser is not None:
+        return 'signUp filed, this email has existed<br /><a href="/">返回</a>'
+    newUser = User(studentID, studentName, password, email, type)
+    db.session.add(newUser)
+    db.session.commit()
+    session['userID'] = newUser._id
+    return 'signUp succeed<br /><a href="/">返回</a>'
+
+
+@app.route('/signOut')
+def signOut():
+    session.pop('userID', None)
+    return 'logout succeed<br /><a href="/">返回</a>'
+
+
 @app.route('/view_asses')
 def view_assignments():
     asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
-    #app.jinja_env.globals.update(assignments=asses[:7])   # what's this mean?
 
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        global_user = None
-    if global_user:
-        return render_template('view_assignments.html',
-                           assignments=asses, global_user=global_user)
-    else:
-        return render_template('base.html')
-
-
-@app.route('/search_result', methods=['GET'])
-def view_search_result():
-    keyword = request.args.get('keyword')
-    asses = Assignment.query.filter(Assignment.name.like('%%%s%%' % keyword))\
-                                        .order_by(Assignment.deadline.desc())
-
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        global_user = None
+    global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if global_user:
         return render_template('view_assignments.html',
@@ -58,111 +89,88 @@ def view_search_result():
 def view_assignment_instance(_id):
     ass = Assignment.query.filter(Assignment._id == _id).first()
 
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        global_user = None
+    global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if global_user:
         return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
     else:
-        return render_template('base.html')
+        return redirect('/')
+
+
+@app.route('/search_result', methods=['GET'])
+def view_search_result():
+    keyword = request.args.get('keyword')
+    asses = Assignment.query.filter(Assignment.name.like('%%%s%%' % keyword))\
+                                        .order_by(Assignment.deadline.desc())
+
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if global_user:
+        return render_template('view_assignments.html',
+                           assignments=asses, global_user=global_user)
+    else:
+        return redirect('/')
+
 
 @app.route('/donate')
 def view_donate():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+
+    if not global_user:
+        return render_template('/')
     return render_template('donate.html', global_user=global_user)
-
-
-@app.route('/delete_disc', methods=['POST'])
-def delete_discussion():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
-
-    disc_id = int(request.form['disc_id'])
-    ass_id = int(request.form['ass_id'])
-
-    status = 'ok'
-    err = ''
-
-    discussion = Discussion.query.filter(Discussion._id == disc_id).first()
-    if discussion.user._id != app.jinja_env.globals.get('global_user')._id:
-        status = 'failed'
-        err = 'user id does not match, you are not authorized to do this'
-    else:
-        assignment = Assignment.query.filter(Assignment._id == ass_id).first()
-
-        if assignment.first_discussion_id == disc_id:
-            assignment.first_discussion_id = discussion.next_id
-        else:
-            disc_chain = list(assignment.discussions())[::-1]
-            if disc_id not in [item._id for item in disc_chain]:
-                status = 'failed'
-                err = 'discussion id not in assignment'
-
-            while disc_chain:
-                prev_disc = disc_chain.pop(0)
-                next_disc = prev_disc.next()
-                if next_disc._id == disc_id:
-                    prev_disc.next_id = next_disc.next_id
-                    if assignment.last_discussion_id == next_disc._id:
-                        assignment.last_discussion_id = prev_disc._id
-                    break
-
-            try:
-                db.session.commit()
-            except:
-                status = 'failed'
-                err = 'database transaction failed'
-
-    return jsonify({'status': status,
-                    'error': err})
 
 
 @app.route('/append_disc', methods=['POST'])
 def append_discussion():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return render_template('/')
 
     ass_id = request.form['ass_id']
     discussion_text = request.form['disc']
-    user_id = request.form['user_id']
-    date = int(request.form['date'])
-
-    date = datetime.date.fromtimestamp(date / 1000.)
 
     ass = Assignment.query.filter(Assignment._id == ass_id).first()
-    if ass:
-        ok, err = ass.append_discussion(discussion_text, user_id, date)
-        if ok:
-            return jsonify({'status': 'ok',
-                            'error': ''})
-        else:
-            return jsonify({'status': 'failed',
-                            'error': err})
-    else:
-        return jsonify({'status': 'failed',
-                        'error': u'invalid assignment id'})
+
+    if not ass:
+        return redirect('/')
+
+    ass.discussions.append(Discussion(discussion_text, global_user._id))
+    db.session.add(ass)
+    db.session.commit()
+
+    return 'succeed'
+
+
+@app.route('/delete_disc', methods=['POST'])
+def delete_discussion():
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect('/')
+
+    disc_id = int(request.form['disc_id'])
+
+    discussion = Discussion.query.filter(Discussion._id == disc_id).first()
+
+    if discussion.user != global_user:
+        return 'user id does not match, you are not authorized to do this'
+
+    db.session.delete(discussion)
+    db.session.commit()
+    return 'succeed'
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+    global_user = User.query.filter(User._id == session['userID']).first()
+    if not global_user:
+        return redirect('/')
 
     f = request.files['file']
     user_id = session['userID']
     assignmentID = request.form['whichAss']
     fileSubmitName = f.filename
-    fileExtend = fileSubmitName.split('.')[-1];
+    fileExtend = fileSubmitName.split('.')[-1]; # fix me: no extend name
     #check filename here
     thisUser = User.query.filter(User._id == user_id).first()
     thisTask = Assignment.query.filter(Assignment._id == assignmentID).first()
@@ -170,26 +178,21 @@ def upload():
 
     filePath = './upload/' + thisTask.name + '/'
 
-    if os.path.exists(filePath):
-        pass
-    else:
+    if not os.path.exists(filePath):
         os.makedirs(filePath)
     f.save(os.path.join(filePath, fileNewName))
 
-    lastSubmit = Submission.query.filter(Submission.student_id == thisUser._id and Submission.assignment_id == thisTask._id).first()
+    lastSubmit = Submission.query.filter(and_(Submission.student_id == thisUser._id, Submission.assignment_id == thisTask._id)).first()
 
     if lastSubmit is not None:
-        db.delete(lastSubmit)
-    else:
-        newUpload = Submission(thisUser._id, thisTask._id, filePath, fileSubmitName, fileNewName)
-        db.session.add(newUpload)
+        db.session.delete(lastSubmit)
+        db.session.commit()
+    newUpload = Submission(thisUser._id, thisTask._id, filePath, fileSubmitName, fileNewName)
+    db.session.add(newUpload)
     db.session.commit()
-    #insert into database here
 
-    #tasks = Submission.query.filter(Submission.student_id == thisUser._id).all()
-    #print tasks
+    return u'文件：' + fileSubmitName + u'上传成功'
 
-    return   u'文件：' + fileSubmitName + u'上传成功'
 
 @app.route('/thisUserData')
 def thisUserData():
@@ -198,58 +201,35 @@ def thisUserData():
     except KeyError:
         return render_template('base.html')
 
-    thisUser = User.query.filter(User._id == session['userID']).first()
     tasks = Submission.query.filter(Submission.student_id == session['userID']).all()
     taskNames = []
     for task in tasks:
-        ass = Assignment.query.filter(Assignment._id == task._id).first()
+        ass = Assignment.query.filter(Assignment._id == task.assignment_id).first()
         taskNames.append((ass, task))
 
-    return render_template('thisUserData.html', thisUser = thisUser, taskNames = taskNames, global_user = global_user)
+    return render_template('thisUserData.html', taskNames = taskNames, global_user = global_user)
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
 
-@app.route('/checkLogin', methods=['POST'])
-def checkLogin():
-    #print request.form
-    userName = request.form['userName']
-    password = request.form['password']
-    thisUser = User.query.filter(User.student_id == userName and User.password == password).first()
-    if thisUser is not None:
-        session['userID'] = thisUser._id
-        return 'login Succeed'
-    else:
-        return 'login failed'
 
-@app.route('/logout')
-def logOut():
-    session.pop('userID', None)
-    return 'logout succeed'
+@app.route('/addAssignment')
+def addAssignment():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
 
-@app.route('/signUp')
-def signUp():
-    return render_template('signUp.html')
+    return render_template('addAssignment.html', global_user = global_user)
 
-@app.route('/checkSignUp', methods=['POST'])
-def checkSignUp():
-    studentName = request.form['studentName']
-    studentID = request.form['studentID']
-    password = request.form['password']
-    email = request.form['email']
-    #check input here
-    thisUser = User.query.filter(User.student_id == studentID).first();
-    if thisUser is not None:
-        db.session.delete(thisUser)
-        db.session.commit()
-    newUser = User(studentName, password, studentID, email)
-    db.session.add(newUser)
-    db.session.commit()
-    session['userID'] = newUser._id
-    return 'signUp succeed'
+@app.route('/submitAddAssignment', methods=['POST'])
+def submitAssignment():
+    try:
+        global_user = User.query.filter(User._id == session['userID']).first()
+    except KeyError:
+        return render_template('base.html')
+
+    print request.form
+    return 's'
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 

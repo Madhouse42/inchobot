@@ -9,7 +9,6 @@ class Submission(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('user._id'))
     assignment_id = db.Column(db.Integer, db.ForeignKey('assignment._id'))
     file_submit_name = db.Column(db.String)
-    #file_real_name = db.Column(db.String)
     file_new_name = db.Column(db.String)
     files_url = db.Column(db.String)
 
