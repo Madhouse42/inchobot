@@ -174,7 +174,7 @@ def upload():
     user_id = session['userID']
     assignmentID = request.form['whichAss']
     fileSubmitName = f.filename
-    fileExtend = fileSubmitName.split('.')[-1]; # fix me: no extend name
+    fileExtend = fileSubmitName.split('.')[-1];  # TODO no extend name
     #check filename here
     thisUser = User.query.filter(User._id == user_id).first()
     thisTask = Assignment.query.filter(Assignment._id == assignmentID).first()
