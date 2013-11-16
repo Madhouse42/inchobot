@@ -43,7 +43,7 @@ def signUp():
     if request.method == 'GET':
         return render_template('signUp.html')
 
-    studentName = request.form.get('studentName', '')
+    studentName = request.form.get('studentName')
     studentID = request.form.get('studentID')
     password = request.form.get('password')
     email = request.form.get('email')
@@ -57,13 +57,13 @@ def signUp():
     if thisUser is not None:
         err = u"这个用户名已经被人使用了"
         print err
-        return render_template(url_for(signUp), err=err)
+        return render_template('signUp.html', err=err)
 
     thisUser = User.query.filter(User.email == email).first()
     if thisUser is not None:
         err = u"这个邮箱地址已经被人使用了"
         print err
-        return render_template(url_for(signUp), err=err)
+        return render_template('signUp.html', err=err)
     newUser = User(studentID, studentName, password, email, datetime.datetime.today(), type)
     db.session.add(newUser)
     db.session.commit()

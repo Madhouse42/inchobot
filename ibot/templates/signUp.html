@@ -17,20 +17,37 @@
             {% endif %}
             <div class="input-group">
                 <span class="input-group-addon">学号</span>
-                <input type="text" class="form-control" placeholder="学号" required autofocus>
+                <input name="studentID" type="text" class="form-control" placeholder="学号" required autofocus>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">姓名</span>
-                <input type="text" class="form-control" placeholder="姓名" required>
+                <input name="studentName" type="text" class="form-control" placeholder="姓名" required>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">邮箱</span>
-                <input type="text" class="form-control" placeholder="邮箱" required>
+                <input name="email" type="text" class="form-control" placeholder="邮箱" required>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">密码</span>
-                <input type="password" class="form-control" placeholder="密码" required>
+                <input name="password" type="password" class="form-control" placeholder="密码" required>
             </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input name="type" value="student" checked="checked" type="radio">
+                        </span>
+                        <span class="form-control">学生</span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input name="type" value="teacher" type="radio">
+                        </span>
+                        <span class="form-control">教师</span>
+                    </div><!-- /input-group -->
+            </div><!-- /.row -->
             <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
             &nbsp;
             <p>已有账户？<a href="/signIn">直接登录</a></p>
