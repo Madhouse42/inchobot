@@ -29,14 +29,14 @@
         </td>
         <td><a href="{{ item.files_url }}">{{ item.files_url }}</a></td>
         <td>
-            {% if global_user._id == item.user._id %}
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="delete_assignment({{ item._id }})">
-                          删除
-                </button>
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="update_assignment({{ item._id }})">
-                    修改
-                </button>
-            {% endif %}
+        {% if global_user._id == item.user._id %}
+            <!--button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="delete_assignment({{ item._id }})">
+                删除
+            </button-->
+            <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="update_assignment({{ item._id }})">
+                修改
+            </button>
+        {% endif %}
         </td>
     </tr>
     {% endfor %}

@@ -6,66 +6,86 @@
 {% endblock %}
 
 {% block content %}
-<div class="input-group">
-    <span class="input-group-addon">我的帐号（学号）</span>
-    <span class="form-control" >{{ global_user.studentID }}</span>
+<div class="container">
+    <div class="page-header">
+        <h2>
+            账户信息
+            <small><a href="/update_user_data">修改</a></small>
+        </h2>
+    </div>
+    <div class="panel panel-default">
+    <div class="input-group">
+        <span class="input-group-addon">我的帐号</span>
+        <span class="form-control" >{{ global_user.studentID }}</span>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">我的姓名</span>
+        <span class="form-control" >{{ global_user.studentTeacherName }}</span>
+    </div>
+    </div>
+
+    {% if global_user.submissions and global_user.type == (2 or 0)%}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            提交记录
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <tr>
+                    <td>作业名</td>
+                    <td>文件名</td>
+                    <td>提交时间</td>
+                    <td></td>
+                </tr>
+                    {% for submit  in global_user.submissions %}
+                    <tr>
+                        <td>{{ submit.assignment_obj.name }}</td>
+                        <td>{{ submit.file_submit_name }}</td>
+                        <td>{{ submit.date }}</td>
+                        <td>
+                            <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
+                                删除
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if global_user.assignments and global_user.type == (1 or 0)%}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            发布的作业
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <tr>
+                    <td>作业名</td>
+                    <td>期限</td>
+                    <td>提交时间</td>
+                </tr>
+                    {% for ass in global_user.assignments %}
+                    <tr>
+                        <td>{{ ass.name}}</td>
+                        <td>{{ ass.deadline }}</td>
+                        <td>{{ ass.submit_date }}</td>
+                        <td>
+                            <div class="btn-group pull-right">
+                            <button class="btn btn-danger" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
+                                修改
+                            </button>
+                            <button class="btn btn-danger" id="btn-delete-disc-{{ ass._id }}" onclick="delete_assignment({{ ass._id }})">
+                                删除
+                            </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
 </div>
-<div class="input-group">
-    <span class="input-group-addon">我的姓名</span>
-    <span class="form-control" >{{ global_user.studentTeacherName }}</span>
-</div>
-
-{% if global_user.submissions and global_user.type == (2 or 0)%}
-    提交记录:<br />
-
-<table class="table table-bordered">
-    <tr>
-        <td>作业名</td>
-        <td>文件名</td>
-        <td>提交时间</td>
-        <td></td>
-    </tr>
-        {% for submit  in global_user.submissions %}
-        <tr>
-            <td>{{ submit.assignment_obj.name }}</td>
-            <td>{{ submit.file_submit_name }}</td>
-            <td>{{ submit.date }}</td>
-            <td>
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
-                    删除
-                </button>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-{% endif %}
-
-{% if global_user.assignments and global_user.type == (1 or 0)%}
-    发布的作业：<br />
-<table class="table table-bordered">
-    <tr>
-        <td>作业名</td>
-        <td>期限</td>
-        <td>提交时间</td>
-        <td></td>
-    </tr>
-        {% for ass in global_user.assignments %}
-        <tr>
-            <td>{{ ass.name}}</td>
-            <td>{{ ass.deadline }}</td>
-            <td>{{ ass.submit_date }}</td>
-            <td>
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass._id }}" onclick="delete_assignment({{ ass._id }})">
-                    删除
-                </button>
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
-                    修改
-                </button>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-{% endif %}
-
-<a href="/update_user_data">修改用户信息</a>
 {% endblock %}

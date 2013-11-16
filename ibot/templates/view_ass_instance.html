@@ -27,14 +27,10 @@
                            {{ ass_instance.user.email }}
                  </a>
             </small>
-        </h2>
-
-        <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="delete_assignment({{ ass_instance._id }})">
-        删除
-    </button>
-                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="update_assignment({{ ass_instance._id }})">
-              修改
+            <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="update_assignment({{ ass_instance._id }})">
+                 修改
             </button>
+        </h2>
     </div>
 
     <div class="panel {{ dead_or_alive(ass_instance) }}">
@@ -132,9 +128,9 @@
                 </form>
             </div>
         </div>
-        <div class="list-group">
+        <ul class="list-group">
             {% for item in ass_instance.discussions[::-1] %}
-                <a class="list-group-item" href="#">
+                <li class="list-group-item">
                     <h5 class="list-group-item-heading">
                         <small class="list-group-item-text">
                             {{ item.date }},&nbsp;
@@ -150,9 +146,9 @@
                         <br />
                         {{ item.discussion }}
                     </h5>
-                </a>
+                </li>
             {% endfor %}
-        </div>
+        </ul>
     </div>
 
 </div>
