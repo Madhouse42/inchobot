@@ -8,7 +8,7 @@ class Discussion(db.Model):
 
     _id = db.Column(db.Integer, primary_key=True)
     discussion = db.Column(db.String)
-    date = db.Column(db.Date)
+    date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'))
     assignment_id = db.Column(db.Integer, db.ForeignKey('assignment._id'))
     user = db.relationship('User',
@@ -18,8 +18,8 @@ class Discussion(db.Model):
                                  primaryjoin='Discussion.assignment_id == Assignment._id',
                                  backref=db.backref('discussions', order_by='Discussion.date'))
 
-    def __init__(self, discussion, user_id, date=datetime.date.today()):
+    def __init__(self, discussion, user_id, date=datetime.datetime.today()):
         self.discussion = discussion
-        self.date = date  # change date type here
+        self.date = date
         self.user_id = user_id
 
