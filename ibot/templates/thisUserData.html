@@ -1,15 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3>user ID: {{ global_user._id }}</h3>
-<h3>user student id: {{ global_user.student_id }}</h3>
-<h3>user name: {{ global_user.studentTeacherName }}
-<h3>user submit: </h3>
-{% for (ass, task)  in taskNames %}
-    <h3>task id: {{ ass.name }}
-        file name: {{ task.file_submit_name }}
-        提交时间：{{ task.date }}
-    </h3>
+我的帐号（学号） : {{ global_user.student_id }}<br />
+我的姓名: {{ global_user.studentTeacherName }}<br />
+
+user submit:<br />
+{% for submit  in global_user.submissions %}
+    task name: {{ submit.assignment_obj.name }}
+    file name: {{ submit.file_submit_name }}
+    提交时间：{{ submit.date }}
+    <br />
 {% endfor %}
-</h3>
+
+    发布的作业：<br />
+{% for ass in global_user.assignments %}
+    task name: {{ ass.name }}
+    提交时间：{{ ass.submit_date }}
+    {% endfor %}
+
+<a href="/update_user_data">修改用户信息</a>
 {% endblock %}

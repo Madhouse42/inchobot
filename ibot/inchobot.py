@@ -196,18 +196,11 @@ def upload():
 
 @app.route('/thisUserData')
 def thisUserData():
-    try:
-        global_user = User.query.filter(User._id == session['userID']).first()
-    except KeyError:
-        return render_template('base.html')
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect('/')
 
-    tasks = Submission.query.filter(Submission.student_id == session['userID']).all()
-    taskNames = []
-    for task in tasks:
-        ass = Assignment.query.filter(Assignment._id == task.assignment_id).first()
-        taskNames.append((ass, task))
-
-    return render_template('thisUserData.html', taskNames = taskNames, global_user = global_user)
+    return render_template('thisUserData.html', global_user=global_user)
 
 @app.route('/addAssignment', methods=['POST', 'GET'])
 def addAssignment():
@@ -242,7 +235,24 @@ def delete_assignment():
         return 'failed'
     db.session.delete(ass)
     db.session.commit()
-    return 'succeed'
+    return 'succeed<br /><a href="/">返回</a>'
+
+@app.route('/update_user_data', methods=['POST', 'GET'])
+def update_user_data():
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect('/')
+
+    if request.method == 'GET':
+        return render_template('update_user_data.html')
+
+    new_name = request.form.get('name', global_user.studentTeacherName)
+    new_pass = request.form.get('password')
+    new_email = request.form.get('email', global_user.email)
+    db.session.query(User).filter(User._id == global_user._id).\
+        update({'studentTeacherName': new_name, 'password': new_pass, 'email': new_email})
+    db.session.commit()
+    return 'succeed<br /><a href="/">返回</a>'
 
 if __name__ == '__main__':
     app.run(debug=True)

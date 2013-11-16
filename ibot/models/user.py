@@ -1,5 +1,6 @@
 # encoding: utf-8
 from ibot import db
+import datetime
 
 
 class User(db.Model):
@@ -10,6 +11,7 @@ class User(db.Model):
     studentTeacherName = db.Column(db.String)
     password = db.Column(db.String)
     email = db.Column(db.String, unique=True)
+    date = db.Column(db.DateTime)
 
     type = db.Column(db.Integer)
     """
@@ -18,12 +20,13 @@ class User(db.Model):
     type 2: student
     """
 
-    def __init__(self, studentID, studentTeacherName, password, email='', type=2):
+    def __init__(self, studentID, studentTeacherName, password, email='', type=2, date = datetime.datetime.today()):
         self.studentID = studentID
         self.studentTeacherName = studentTeacherName
         self.password = password
         self.email = email
         self.type = type
+        self.date = date
 
 
 

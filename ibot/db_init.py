@@ -33,10 +33,10 @@ def run():
                       'description3',
                       datetime.date(2013, 10, 20))
 
-    ass1.discussions = [Discussion('fuck', student._id, datetime.date(2013, 10, 22)),
-                        Discussion('fuck two', student._id, datetime.date(2013, 10, 23)),
-                        Discussion('oh', student._id, datetime.date(2013, 10, 24))]
-    ass3.discussions = [Discussion('woshi', student._id, datetime.date(2013, 10, 24))]
+    ass1.discussions = [Discussion('fuck', student._id, datetime.datetime(2013, 10, 22)),
+                        Discussion('fuck two', student._id, datetime.datetime(2013, 10, 23)),
+                        Discussion('oh', student._id, datetime.datetime(2013, 10, 24))]
+    ass3.discussions = [Discussion('woshi', student._id, datetime.datetime(2013, 10, 24))]
 
     try:
         db.session.add(ass1)
