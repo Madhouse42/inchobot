@@ -39,7 +39,6 @@ def signIn():
 
 @app.route('/signUp', methods=['POST', 'GET'])
 def signUp():
-    print request.form
     if request.method == 'GET':
         return render_template('signUp.html')
 
@@ -56,13 +55,11 @@ def signUp():
     thisUser = User.query.filter(User.studentID == studentID).first()
     if thisUser is not None:
         err = u"这个用户名已经被人使用了"
-        print err
         return render_template('signUp.html', err=err)
 
     thisUser = User.query.filter(User.email == email).first()
     if thisUser is not None:
         err = u"这个邮箱地址已经被人使用了"
-        print err
         return render_template('signUp.html', err=err)
     newUser = User(studentID, studentName, password, email, datetime.datetime.today(), type)
     db.session.add(newUser)
@@ -224,8 +221,9 @@ def addAssignment():
     name = request.form.get('name')
     description = request.form.get('description')
     file_url = request.form.get('fileURL')
-    deadline = request.form.get('deadline')  # check deadline format here
-    new_ass = Assignment(name, global_user._id, file_url, description, datetime.datetime.today(), datetime.datetime.today())
+    deadline = request.form.get('deadline')
+    deadline = datetime.datetime.today()  # TODO
+    new_ass = Assignment(name, global_user._id, file_url, description, deadline, datetime.datetime.today())
     db.session.add(new_ass)
     db.session.commit()
     return redirect(url_for('home_page'))
@@ -283,6 +281,17 @@ def update_assignment(_id):
         return redirect(url_for(home_page))
     if request.method == 'GET':
         return render_template('update_assignment.html', global_user=global_user)
+    name = request.form.get('name')
+    description = request.form.get('description')
+    file_url = request.form.get('fileURL')
+    deadline = request.form.get('deadline')
+    deadline = datetime.datetime.today()  # TODO
+    #Assignment.query.filter(Assignment._id == _id).update({'name': name, 'descriptions': description, 'files_url': file_url, 'deadline': deadline})
+    ass = Assignment.query.filter(Assignment._id == _id)
+    ass.update({'name': name, 'descriptions': description, 'files_url': file_url, 'deadline': deadline})
+
+    db.session.commit()
+
     return redirect('view_asses/' + _id.__str__())
 
 
