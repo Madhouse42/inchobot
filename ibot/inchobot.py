@@ -94,7 +94,8 @@ def view_assignments():
 def view_assignment_instance(_id):
     asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
     ass = Assignment.query.filter(Assignment._id == _id).first()
-
+    if not ass:
+        return redirect(url_for('home_page'))
     global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if global_user:
@@ -270,6 +271,20 @@ def update_user_data():
         update({'studentTeacherName': new_name, 'password': new_pass, 'email': new_email})
     db.session.commit()
     return redirect(url_for('thisUserData'))
+
+
+@app.route('/update_assignment/<int:_id>', methods=['POST', 'GET'])
+def update_assignment(_id):
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect(url_for(home_page))
+    ass = Assignment.query.filter(Assignment._id == _id).first()
+    if ass.user != global_user:
+        return redirect(url_for(home_page))
+    if request.method == 'GET':
+        return render_template('update_assignment.html', global_user=global_user)
+    return redirect('view_asses/' + _id.__str__())
+
 
 if __name__ == '__main__':
     app.run(debug=True)

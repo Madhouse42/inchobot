@@ -13,3 +13,7 @@ var delete_assignment = function (id) {
                 location.reload();
     });
 };
+
+var update_assignment = function(id){
+    location.href = '/update_assignment/' + id
+};

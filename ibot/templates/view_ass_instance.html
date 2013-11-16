@@ -28,7 +28,15 @@
                  </a>
             </small>
         </h2>
+
+        <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="delete_assignment({{ ass_instance._id }})">
+        删除
+    </button>
+                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="update_assignment({{ ass_instance._id }})">
+              修改
+            </button>
     </div>
+
     <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             作业描述 &nbsp&nbsp&nbsp&nbsp
@@ -71,6 +79,29 @@
                 </div>
                 <button type="button" class="btn btn-primary" value="Upload" onclick="uploadFile('{{ ass_instance._id }}')">Upload</button>
             </form>
+        </div>
+    </div>
+    {% endif %}
+    {% if global_user.type == (0 or 1) and global_user == ass_instance.user%}
+    <div class="panel {{ dead_or_alive(ass_instance) }}">
+        <div class="panel-heading">
+            作业提交情况 &nbsp;&nbsp;&nbsp;提交人数：{{ ass_instance.submissions.__len__() }}
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered">
+                <tr>
+                    <td>姓名</td>
+                    <td>学号</td>
+                    <td>提交时间</td>
+                </tr>
+                    {% for ass in ass_instance.submissions %}
+                    <tr>
+                        <td>{{ ass.user.studentTeacherName}}</td>
+                        <td>{{ ass.user.studentID }}</td>
+                        <td>{{ ass.date }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
     {% endif %}

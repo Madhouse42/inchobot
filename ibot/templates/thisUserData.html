@@ -58,6 +58,9 @@
                 <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass._id }}" onclick="delete_assignment({{ ass._id }})">
                     删除
                 </button>
+                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
+                    修改
+                </button>
             </td>
         </tr>
     {% endfor %}
