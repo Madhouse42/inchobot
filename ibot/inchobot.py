@@ -34,19 +34,19 @@ def signIn():
         return redirect(url_for('home_page'))
     else:
         err = u"用户名或者密码错误"
-        return render_template('signIn.html', err = err)
+        return render_template('signIn.html', err=err)
 
 
 @app.route('/signUp', methods=['POST', 'GET'])
 def signUp():
     print request.form
-    if not request.form:
+    if request.method == 'GET':
         return render_template('signUp.html')
 
-    studentName = request.form['studentName']
-    studentID = request.form['studentID']
-    password = request.form['password']
-    email = request.form['email']
+    studentName = request.form.get('studentName', '')
+    studentID = request.form.get('studentID')
+    password = request.form.get('password')
+    email = request.form.get('email')
     type = request.form.get('type', 'student')
     if type == 'teacher':
         type = 1
@@ -55,16 +55,20 @@ def signUp():
     #check input here
     thisUser = User.query.filter(User.studentID == studentID).first()
     if thisUser is not None:
-        return 'signUp filed, this username has existed<br /><a href="/">返回</a>'
+        err = u"这个用户名已经被人使用了"
+        print err
+        return render_template(url_for(signUp), err=err)
 
     thisUser = User.query.filter(User.email == email).first()
     if thisUser is not None:
-        return 'signUp filed, this email has existed<br /><a href="/">返回</a>'
+        err = u"这个邮箱地址已经被人使用了"
+        print err
+        return render_template(url_for(signUp), err=err)
     newUser = User(studentID, studentName, password, email, datetime.datetime.today(), type)
     db.session.add(newUser)
     db.session.commit()
     session['userID'] = newUser._id
-    return 'signUp succeed<br /><a href="/">返回</a>'
+    return redirect(url_for('home_page'))
 
 
 @app.route('/signOut')

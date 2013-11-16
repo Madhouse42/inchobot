@@ -1,32 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>signUp</title>
-</head>
-<body>
-       <form method="post">
-      <div>
-        <label>学号</label>
-        <input type="text" name="studentID" placeholder="Enter student ID">
-      </div>
-      <div>
-        <label>姓名</label>
-        <input type="text" name="studentName" placeholder="Enter student Name">
-      </div>
-      <div>
-        <label>Password</label>
-        <input type="password"  name="password" placeholder="Password">
-      </div>
-      <div>
-        <label>Email</label>
-        <input type="text"  name="email" placeholder="Email">
-      </div>
-      <div>
-          <input type="radio" name="type" value="teacher" />teacher
-          <br />
-          <input type="radio" name="type" value="student" checked="checked" />student
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+{% extends "bootstrap/base.html" %}
+{% block title %}SignUp{% endblock %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='css/signin.css')}}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <form class="form-signin" method="post">
+            <h2 class="form-signin-heading">学委Bot-注册界面</h2>
+            {% if err %}
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>错误：</strong>{{ err }}
+                </div>
+            {% endif %}
+            <div class="input-group">
+                <span class="input-group-addon">学号</span>
+                <input type="text" class="form-control" placeholder="学号" required autofocus>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">姓名</span>
+                <input type="text" class="form-control" placeholder="姓名" required>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">邮箱</span>
+                <input type="text" class="form-control" placeholder="邮箱" required>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">密码</span>
+                <input type="password" class="form-control" placeholder="密码" required>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
+            &nbsp;
+            <p>已有账户？<a href="/signIn">直接登录</a></p>
+        </form>
+    </div>
+{% endblock %}
