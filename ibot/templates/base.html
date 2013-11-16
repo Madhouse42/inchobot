@@ -22,20 +22,21 @@
                 {% endif %}
                 {% if global_user.type == 1 %}
                     <li class="active"><a href="/addAssignment">添作业</a></li>
+                    <li class="active"><a href="{{ url_for('view_assignments') }}">查看作业</a></li>
                 {% endif %}
                 {% if global_user.type == 0 %}
                     <li class="active"><a href="{{ url_for('view_assignments') }}">交作业</a></li>
                     <li class="active"><a href="/addAssignment">添作业</a></li>
                 {% endif %}
 
-                <li class="dropdown">
+                <!-- li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">近期作业 <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        {% for item in assignments %}
+                        ##{% for item in assignments %}
                             <li><a href="{{ url_for('view_assignment_instance', _id=item._id) }}">{{ item.name }}</a></li>
-                        {% endfor %}
+                        ##{% endfor %}
                     </ul>
-                </li>
+                </li -->
             </ul>
             <form class="navbar-form navbar-left" action="{{ url_for('view_search_result') }}" role="search">
                 <div class="form-group">

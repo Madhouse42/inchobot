@@ -46,6 +46,7 @@
             {% endif %}
         </div>
     </div>
+    {% if global_user.type == (0 or 2) %}
     <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             上传作业
@@ -72,6 +73,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
     <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
             讨论区
@@ -128,6 +130,7 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript" src="/static/javascripts/upload.js"> </script>
+    <script type="text/javascript" src="/static/javascripts/button.js"> </script>
     <script type="text/javascript">
         $('#discussion-submit').click(function () {
             $.post('/append_disc', {
@@ -137,14 +140,6 @@
                         location.reload();
             });
         });
-        var delete_disc = function (id) {
-            $.post('/delete_disc', {
-                disc_id: id,
-                ass_id: {{ ass_instance._id }}
-            }).done(function (data) {
-                        location.reload();
-            });
-        };
         var append_ass = function () {
             console.log('not implemented');
         };

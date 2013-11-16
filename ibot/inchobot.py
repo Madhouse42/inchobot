@@ -74,7 +74,7 @@ def signUp():
 @app.route('/signOut')
 def signOut():
     session.pop('userID', None)
-    return 'logout succeed<br /><a href="/">返回</a>'
+    return redirect(url_for('home_page'))
 
 
 @app.route('/view_asses')
@@ -92,12 +92,13 @@ def view_assignments():
 
 @app.route('/view_asses/<int:_id>')
 def view_assignment_instance(_id):
+    asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
     ass = Assignment.query.filter(Assignment._id == _id).first()
 
     global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if global_user:
-        return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
+        return render_template('view_ass_instance.html', assignments=asses, ass_instance=ass, global_user = global_user)
     else:
         return redirect('/')
 
@@ -211,11 +212,12 @@ def thisUserData():
 @app.route('/addAssignment', methods=['POST', 'GET'])
 def addAssignment():
     global_user = User.query.filter(User._id == session.get('userID')).first()
+    asses = Assignment.query.order_by(Assignment.deadline.desc()).all()
     if not global_user:
         return redirect('/')
 
     if request.method == 'GET':
-        return render_template('addAssignment.html', global_user=global_user)
+        return render_template('addAssignment.html', global_user=global_user, assignments=asses)
 
     # insert assignment into database here
     name = request.form.get('name')
@@ -225,7 +227,7 @@ def addAssignment():
     new_ass = Assignment(name, global_user._id, file_url, description, datetime.datetime.today(), datetime.datetime.today())
     db.session.add(new_ass)
     db.session.commit()
-    return 'succeed<br /><a href="/">返回</a>'
+    return redirect(url_for('home_page'))
 
 
 @app.route('/delete_assignment', methods=['POST'])
@@ -251,15 +253,23 @@ def update_user_data():
         return redirect('/')
 
     if request.method == 'GET':
-        return render_template('update_user_data.html')
+        return render_template('update_user_data.html', global_user=global_user)
 
     new_name = request.form.get('name', global_user.studentTeacherName)
-    new_pass = request.form.get('password')
+    new_pass = request.form.get('new_password')
+    old_pass = request.form.get('password')
     new_email = request.form.get('email', global_user.email)
+    user = User.query.filter(User.email == new_email).first()
+    if global_user.password != old_pass:
+        err = u'密码不正确'
+        return render_template('update_user_data.html', err=err, global_user=global_user)
+    if user:
+        err = '这个邮箱地址已经被人使用了'
+        return render_template('update_user_data.html', err=err, global_user=global_user)
     db.session.query(User).filter(User._id == global_user._id).\
         update({'studentTeacherName': new_name, 'password': new_pass, 'email': new_email})
     db.session.commit()
-    return 'succeed<br /><a href="/">返回</a>'
+    return redirect(url_for('thisUserData'))
 
 if __name__ == '__main__':
     app.run(debug=True)

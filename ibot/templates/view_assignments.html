@@ -43,13 +43,5 @@
 
 {% block scripts %}
     {{ super() }}
-    <script type="text/javascript">
-        var delete_assignment = function (id) {
-            $.post('/delete_assignment', {
-                assignment_id: id
-            }).done(function (data) {
-                        location.reload();
-            });
-        };
-    </script>
+    <script type="text/javascript" src="/static/javascripts/button.js"> </script>
 {% endblock %}

@@ -1,22 +1,68 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="/static/javascripts/button.js"> </script>
+{% endblock %}
+
 {% block content %}
-我的帐号（学号） : {{ global_user.student_id }}<br />
-我的姓名: {{ global_user.studentTeacherName }}<br />
+<div class="input-group">
+    <span class="input-group-addon">我的帐号（学号）</span>
+    <span class="form-control" >{{ global_user.studentID }}</span>
+</div>
+<div class="input-group">
+    <span class="input-group-addon">我的姓名</span>
+    <span class="form-control" >{{ global_user.studentTeacherName }}</span>
+</div>
 
-user submit:<br />
-{% for submit  in global_user.submissions %}
-    task name: {{ submit.assignment_obj.name }}
-    file name: {{ submit.file_submit_name }}
-    提交时间：{{ submit.date }}
-    <br />
-{% endfor %}
+{% if global_user.submissions and global_user.type == (2 or 0)%}
+    提交记录:<br />
 
-    发布的作业：<br />
-{% for ass in global_user.assignments %}
-    task name: {{ ass.name }}
-    提交时间：{{ ass.submit_date }}
+<table class="table table-bordered">
+    <tr>
+        <td>作业名</td>
+        <td>文件名</td>
+        <td>提交时间</td>
+        <td></td>
+    </tr>
+        {% for submit  in global_user.submissions %}
+        <tr>
+            <td>{{ submit.assignment_obj.name }}</td>
+            <td>{{ submit.file_submit_name }}</td>
+            <td>{{ submit.date }}</td>
+            <td>
+                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
+                    删除
+                </button>
+            </td>
+        </tr>
     {% endfor %}
+</table>
+{% endif %}
+
+{% if global_user.assignments and global_user.type == (1 or 0)%}
+    发布的作业：<br />
+<table class="table table-bordered">
+    <tr>
+        <td>作业名</td>
+        <td>期限</td>
+        <td>提交时间</td>
+        <td></td>
+    </tr>
+        {% for ass in global_user.assignments %}
+        <tr>
+            <td>{{ ass.name}}</td>
+            <td>{{ ass.deadline }}</td>
+            <td>{{ ass.submit_date }}</td>
+            <td>
+                <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ ass._id }}" onclick="delete_assignment({{ ass._id }})">
+                    删除
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endif %}
 
 <a href="/update_user_data">修改用户信息</a>
 {% endblock %}
