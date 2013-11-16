@@ -2,7 +2,7 @@
 import datetime
 
 
-def get_color_from_timedelta(t1, t2=datetime.date.today()):
+def get_color_from_timedelta(t1, t2=datetime.datetime.today()):
     delta = (t1 - t2).days
 
     if delta > 7:
@@ -27,11 +27,11 @@ def format_date(date):
     return u'%s %s' % (date, weekday_abbr(date))
 
 
-def get_rest_days(t1, t2=datetime.date.today()):
+def get_rest_days(t1, t2=datetime.datetime.today()):
     return (t1 - t2).days
 
 
-def is_dead(t1, t2=datetime.date.today()):
+def is_dead(t1, t2=datetime.datetime.today()):
     if (t2 - t1).days > 0:
         death = True
     else:
