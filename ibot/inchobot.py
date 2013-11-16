@@ -1,6 +1,6 @@
 # encoding: utf-8
 import datetime
-from flask import render_template, request, jsonify, session, redirect
+from flask import render_template, request, jsonify, session, redirect, url_for
 from sqlalchemy.sql.expression import and_
 import os
 from ibot import *
@@ -13,11 +13,11 @@ def init_db(_=None):
 
 
 @app.route('/', methods=['POST', 'GET'])
-def rootPage():
+def home_page():
     thisUser = User.query.filter(User._id == session.get('userID')).first()
     if not thisUser:
         return redirect('/signIn')
-    return render_template('base.html', global_user = thisUser)
+    return redirect('/view_asses')
 
 
 @app.route('/signIn', methods=['POST', 'GET'])
@@ -31,9 +31,10 @@ def signIn():
     thisUser = User.query.filter(and_(User.studentID == studentID, User.password == password)).first()
     if thisUser is not None:
         session['userID'] = thisUser._id
-        return 'login Succeed<br /><a href="/">返回</a>'
+        return redirect(url_for('home_page'))
     else:
-        return 'login failed<br /><a href="/">返回</a>'
+        err = u"用户名或者密码错误"
+        return render_template('signIn.html', err = err)
 
 
 @app.route('/signUp', methods=['POST', 'GET'])
@@ -59,7 +60,7 @@ def signUp():
     thisUser = User.query.filter(User.email == email).first()
     if thisUser is not None:
         return 'signUp filed, this email has existed<br /><a href="/">返回</a>'
-    newUser = User(studentID, studentName, password, email, type)
+    newUser = User(studentID, studentName, password, email, datetime.datetime.today(), type)
     db.session.add(newUser)
     db.session.commit()
     session['userID'] = newUser._id
@@ -135,7 +136,7 @@ def append_discussion():
     if not ass:
         return redirect('/')
 
-    ass.discussions.append(Discussion(discussion_text, global_user._id))
+    ass.discussions.append(Discussion(discussion_text, global_user._id, datetime.datetime.today()))
     db.session.add(ass)
     db.session.commit()
 
@@ -187,7 +188,7 @@ def upload():
     if lastSubmit is not None:
         db.session.delete(lastSubmit)
         db.session.commit()
-    newUpload = Submission(thisUser._id, thisTask._id, filePath, fileSubmitName, fileNewName)
+    newUpload = Submission(thisUser._id, thisTask._id, filePath, fileSubmitName, fileNewName, datetime.datetime.today())
     db.session.add(newUpload)
     db.session.commit()
 
@@ -201,6 +202,7 @@ def thisUserData():
         return redirect('/')
 
     return render_template('thisUserData.html', global_user=global_user)
+
 
 @app.route('/addAssignment', methods=['POST', 'GET'])
 def addAssignment():
@@ -216,10 +218,11 @@ def addAssignment():
     description = request.form.get('description')
     file_url = request.form.get('fileURL')
     deadline = request.form.get('deadline')  # check deadline format here
-    new_ass = Assignment(name, global_user._id, file_url, description)
+    new_ass = Assignment(name, global_user._id, file_url, description, datetime.datetime.today(), datetime.datetime.today())
     db.session.add(new_ass)
     db.session.commit()
     return 'succeed<br /><a href="/">返回</a>'
+
 
 @app.route('/delete_assignment', methods=['POST'])
 def delete_assignment():

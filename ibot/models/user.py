@@ -20,7 +20,7 @@ class User(db.Model):
     type 2: student
     """
 
-    def __init__(self, studentID, studentTeacherName, password, email='', type=2, date = datetime.datetime.today()):
+    def __init__(self, studentID, studentTeacherName, password, email='', date=datetime.datetime.today(), type=2):
         self.studentID = studentID
         self.studentTeacherName = studentTeacherName
         self.password = password

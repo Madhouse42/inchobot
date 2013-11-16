@@ -22,11 +22,8 @@
         <h2>
             {{ ass_instance.name }}
             <small>
-                {{ ass_instance.user.studentTeacherName }} 资料链接：
-                <a href="{{ ass_instance.files_url }}">
-                    {{ ass_instance.files_url }}
-                </a>
-                 教辅邮箱： <a href="mailto: {{ ass_instance.user.email }}">
+                {{ ass_instance.user.studentTeacherName }}
+                 <a href="mailto: {{ ass_instance.user.email }}">
                            {{ ass_instance.user.email }}
                  </a>
             </small>
@@ -34,7 +31,10 @@
     </div>
     <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
-            作业描述
+            作业描述 &nbsp&nbsp&nbsp&nbsp
+                <a href="{{ ass_instance.files_url }}">
+                    资料下载
+                </a>
         </div>
         <div class="panel-body">
             {{ ass_instance.descriptions }}
@@ -78,34 +78,34 @@
         </div>
         <div class="panel-body">
             <div class="container">
-            <form class="form-horizontal" role="form"
-                  id="discussion-form">
-                <div class="form-group">
-                    <label class="control-label"
-                           for="discussion-area">
-                        Speak Thy Mind
-                    </label>
-                    <textarea class="form-control"
-                              rows="3"
-                              id="discussion-area"></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="submit"
-                            class="btn btn-default"
-                            id="discussion-submit">
-                        发送
-                    </button>
-                </div>
-            </form>
+                <form class="form-horizontal" role="form"
+                      id="discussion-form">
+                    <div class="form-group">
+                        <label class="control-label"
+                               for="discussion-area">
+                            Speak Thy Mind
+                        </label>
+                        <textarea class="form-control"
+                                  rows="3"
+                                  id="discussion-area"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit"
+                                class="btn btn-default"
+                                id="discussion-submit">
+                            发送
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="list-group">
-            {% for item in ass_instance.discussions %}
+            {% for item in ass_instance.discussions[::-1] %}
                 <a class="list-group-item" href="#">
                     <h5 class="list-group-item-heading">
                         <small class="list-group-item-text">
                             {{ item.date }},&nbsp;
-                            {{ item.user.username }}&nbsp;说
+                            {{ item.user.studentTeacherName }}&nbsp;说
                             {% if global_user._id == item.user._id %}
                                 <button class="btn btn-danger pull-right"
                                         id="btn-delete-disc-{{ item._id }}"
@@ -119,7 +119,6 @@
                     </h5>
                 </a>
             {% endfor %}
-
         </div>
     </div>
 
