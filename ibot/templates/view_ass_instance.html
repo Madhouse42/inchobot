@@ -35,10 +35,10 @@
 
     <div class="panel {{ dead_or_alive(ass_instance) }}">
         <div class="panel-heading">
-            作业描述 &nbsp&nbsp&nbsp&nbsp
-                <a href="{{ ass_instance.files_url }}">
+            作业描述
+                <button class="btn btn-success pull-right btn-xs" onclick="location='{{ ass_instance.files_url }}'">
                     资料下载
-                </a>
+                </button>
         </div>
         <div class="panel-body">
             {{ ass_instance.descriptions }}
