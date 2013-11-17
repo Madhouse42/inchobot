@@ -169,12 +169,15 @@ def upload():
     global_user = User.query.filter(User._id == session['userID']).first()
     if not global_user:
         return redirect('/')
-
-    f = request.files['file']
+    print request.form
+    f = request.files.get('file')
+    if not f:
+        err = u"上传文件失败"
+        return err
     user_id = session['userID']
     assignmentID = request.form['whichAss']
     fileSubmitName = f.filename
-    fileExtend = fileSubmitName.split('.')[-1];  # TODO no extend name
+    fileExtend = fileSubmitName.split('.')[-1]  # TODO no extend name
     #check filename here
     thisUser = User.query.filter(User._id == user_id).first()
     thisTask = Assignment.query.filter(Assignment._id == assignmentID).first()
@@ -195,7 +198,7 @@ def upload():
     db.session.add(newUpload)
     db.session.commit()
 
-    return u'文件：' + fileSubmitName + u'上传成功'
+    return u'文件' + fileSubmitName + u'上传成功'
 
 
 @app.route('/thisUserData')
