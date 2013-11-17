@@ -16,17 +16,21 @@
         </h2>
     </div>
     <div class="panel panel-default">
-    <div class="input-group">
-        <span class="input-group-addon">我的帐号</span>
-        <span class="form-control" >{{ global_user.studentID }}</span>
-    </div>
-    <div class="input-group">
-        <span class="input-group-addon">我的姓名</span>
-        <span class="form-control" >{{ global_user.studentTeacherName }}</span>
-    </div>
+        <div class="input-group">
+            <span class="input-group-addon">我的帐号</span>
+            <span class="form-control" >{{ global_user.studentID }}</span>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">我的姓名</span>
+            <span class="form-control" >{{ global_user.studentTeacherName }}</span>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">我的邮箱</span>
+            <span class="form-control" >{{ global_user.email }}</span>
+        </div>
     </div>
 
-    {% if global_user.submissions and global_user.type == (2 or 0)%}
+    {% if global_user.submissions and global_user.type == 2%}
     <div class="panel panel-primary">
         <div class="panel-heading">
             提交记录
@@ -41,7 +45,7 @@
                 </tr>
                     {% for submit  in global_user.submissions %}
                     <tr>
-                        <td>{{ submit.assignment_obj.name }}</td>
+                        <td>{{ submit.assignment.name }}</td>
                         <td>{{ submit.file_submit_name }}</td>
                         <td>{{ submit.date.isoformat().split('.')[0].replace('T', ' ') }}</td>
                         <td align="middle">
@@ -56,7 +60,7 @@
     </div>
     {% endif %}
 
-    {% if global_user.assignments and global_user.type == (1 or 0)%}
+    {% if global_user.assignments and global_user.type == 1%}
     <div class="panel panel-primary">
         <div class="panel-heading">
             发布的作业

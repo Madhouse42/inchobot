@@ -80,9 +80,18 @@ def view_assignments():
 
     global_user = User.query.filter(User._id == session.get('userID')).first()
 
+    is_submit = {}
+    for ass in asses:
+        this_submit = False
+        for sub in global_user.submissions:
+            if sub.assignment == ass:
+                this_submit = True
+                break
+        is_submit[ass] = this_submit
+
     if global_user:
         return render_template('view_assignments.html',
-                           assignments=asses, global_user=global_user)
+                           assignments=asses, global_user=global_user, is_submit=is_submit)
     else:
         return render_template('base.html')
 
@@ -324,6 +333,19 @@ def update_assignment(_id):
 
     return redirect('view_asses/' + _id.__str__())
 
+
+@app.route('/delete_submission', methods=['POST'])
+def delete_submission():
+    global_user = User.query.filter(User._id == session.get('userID')).first()
+    if not global_user:
+        return redirect(url_for(home_page))
+    id = request.form.get('submission_id')
+    submission = Submission.query.filter(Submission._id == id).first()
+    if submission.user == global_user:
+        db.session.delete(submission)
+        db.session.commit()
+
+    return render_template('thisUserData.html', global_user=global_user)
 
 if __name__ == '__main__':
     app.run(debug=True)

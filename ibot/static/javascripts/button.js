@@ -9,9 +9,7 @@
 var delete_assignment = function (id) {
     $.post('/delete_assignment', {
         assignment_id: id
-    }).done(function (data) {
-                location.reload();
-    });
+    }).done(location.reload());
 };
 
 var update_assignment = function(id){
@@ -21,3 +19,8 @@ var update_assignment = function(id){
 var update_user_data = function(){
     location.href = '/update_user_data'
 };
+
+var delete_submission = function(id){
+    $.post('/delete_submission',{submission_id: id}
+    ).done(location.reload())
+}

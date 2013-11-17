@@ -17,7 +17,7 @@ class Submission(db.Model):
     user = db.relationship('User',
                            primaryjoin='Submission.student_id == User._id',
                            backref=db.backref('submissions', order_by='Submission.date'))
-    assignment_obj = db.relationship('Assignment',
+    assignment = db.relationship('Assignment',
                                      primaryjoin='Assignment._id == '
                                                  'Submission.assignment_id',
                                      backref='submissions')

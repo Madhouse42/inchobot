@@ -11,7 +11,7 @@
         <th>资料链接</th>
         <th></th>
     </tr>
-    {% for item in assignments %}
+    {% for item in assignments%}
     <tr>
         <td><a href="{{ url_for('view_assignment_instance', _id=item._id) }}">{{ item.name }}</a></td>
         <td>{{ item.name }}</td>
@@ -28,16 +28,23 @@
             <span>{{ item.deadline }}</span>
         </td>
         <td><a href="{{ item.files_url }}">{{ item.files_url }}</a></td>
-        <td>
-        {% if global_user._id == item.user._id %}
+
+        {% if global_user._id == item.user._id  and global_user.type == 1%}
             <!--button class="btn btn-danger pull-right" id="btn-delete-disc-{{ item._id }}" onclick="delete_assignment({{ item._id }})">
                 删除
             </button-->
-            <button class="btn btn-success pull-right" id="btn-delete-disc-{{ item._id }}" onclick="update_assignment({{ item._id }})">
-                修改
+        <td><button class="btn btn-success pull-right" id="btn-delete-disc-{{ item._id }}" onclick="update_assignment({{ item._id }})">
+            修改
             </button>
-        {% endif %}
         </td>
+        {% endif %}
+        {% if global_user.type == 2 %}
+            {% if is_submit.get(item) %}
+        <td><span class="label label-success">已提交</span></td>
+            {% else %}
+        <td><span class="label label-danger">未提交</span></td>
+            {% endif %}
+        {% endif %}
     </tr>
     {% endfor %}
     </table>
