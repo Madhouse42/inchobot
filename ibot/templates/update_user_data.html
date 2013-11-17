@@ -11,19 +11,19 @@
             {% endif %}
             <div class="input-group">
                 <span class="input-group-addon">姓名</span>
-                <input name="name" {% if msg %}value="{{ msg.name }}" {% endif %}type="text" class="form-control" placeholder="姓名" autofocus>
+                <input name="name" {% if msg %}value="{{ msg.get('name', '') }}" {% endif %}type="text" class="form-control" placeholder="姓名" autofocus>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">邮箱</span>
-                <input name="email" {% if msg %}value="{{ msg.email }}"{% endif %}class="form-control" type="text" placeholder="邮箱">
+                <input name="email" {% if msg %}value="{{ msg.get('email', '') }}"{% endif %}class="form-control" type="text" placeholder="邮箱">
             </div>
             <div class="input-group">
                 <span class="input-group-addon">新密码</span>
-                <input name="new_password" {% if msg %}value="{{ msg.new_password }}" {% endif %}type="password" class="form-control" placeholder="新密码">
+                <input name="new_password" {% if msg %}value="{{ msg.get('new_password', '') }}" {% endif %}type="password" class="form-control" placeholder="新密码">
             </div>
             <div class="input-group">
                 <span class="input-group-addon">旧密码</span>
-                <input name="password" {% if msg %}value="{{ msg.password }}" {% endif %} type="password" class="form-control" placeholder="旧密码" required>
+                <input name="password" {% if msg %}value="{{ msg.get('password', '') }}" {% endif %} type="password" class="form-control" placeholder="旧密码" required>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
         </form>

@@ -17,12 +17,12 @@
             {% endif %}
             <input name="studentID"
                    {% if msg %}
-                   value="{{ msg.get("studentID") }}"
+                   value="{{ msg.get("studentID", '') }}"
                    {% endif %}
                    type="text" class="form-control" placeholder="user name" required autofocus>
             <input name="password"
                    {% if msg %}
-                   value="{{ msg.get("password") }}"
+                   value="{{ msg.get("password", '') }}"
                    {% endif %}
                    type="password" class="form-control" placeholder="Password" required>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

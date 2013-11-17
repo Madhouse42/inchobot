@@ -19,7 +19,7 @@
                 <span class="input-group-addon">学号</span>
                 <input name="studentID"
                     {% if msg %}
-                    value="{{ msg.get("studentID") }}"
+                    value="{{ msg.get("studentID", '') }}"
                     {% endif %}
                     type="text" class="form-control" placeholder="学号" required autofocus>
             </div>
@@ -27,17 +27,17 @@
                 <span class="input-group-addon">姓名</span>
                 <input name="studentName"
                     {% if msg %}
-                    value="{{ msg.get("studentName") }}"
+                    value="{{ msg.get("studentName", '') }}"
                     {% endif %}
                        type="text" class="form-control" placeholder="姓名" required>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">邮箱</span>
-                <input {% if msg %}value="{{ msg.get("email") }}"{% endif %} name="email" type="text" class="form-control" placeholder="邮箱" required>
+                <input {% if msg %}value="{{ msg.get("email", '') }}"{% endif %} name="email" type="text" class="form-control" placeholder="邮箱" required>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">密码</span>
-                <input name="password" {% if msg %}value="{{ msg.get("password") }}"{% endif %} type="password" class="form-control" placeholder="密码" required>
+                <input name="password" {% if msg %}value="{{ msg.get("password", '') }}"{% endif %} type="password" class="form-control" placeholder="密码" required>
             </div>
             <div class="row">
                 <div class="col-lg-6">
