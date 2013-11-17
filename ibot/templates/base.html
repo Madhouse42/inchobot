@@ -1,5 +1,11 @@
-{% extends "bootstrap/base.html" %}
+{% extends "bootstrap_base.html" %}
 {% block title %}学委Bot - 自动化学委系统{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='css/ibot.css')}}">
+{% endblock %}
 
 {% block navbar %}
     <nav class="navbar navbar-default" role="navigation">
@@ -60,5 +66,31 @@
 
 {% block content %}
     <div class="container"><h1>_(:з」∠)_</h1></div>
+{% endblock %}
+
+{% block footer %}
+    <footer>
+        <div>
+            &copy; Copyright 2013,
+            <a href="https://github.com/brickgao"> brickgao</a>
+            <a href="https://github.com/mad4alcohol">mad4alcogol</a>
+            <a href="https://github.com/whuream">whuream</a>
+            in <a href="https://github.com/Madhouse42"> Madhouse42</a>
+        </div>
+        <div>
+            Powered By
+            <a href="http://www.python.org/">Python </a>
+            <a href="http://flask.pocoo.org/"> Flask</a>
+            <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>
+            <a href="http://getbootstrap.com/">Bootstrap</a>
+            <a href="http://jinja.pocoo.org/">Jinja</a>
+            and
+            <a href="https://github.com/">GitHub</a>
+        </div>
+        <div>
+            license:
+            <a href="http://creativecommons.org/licenses/by/3.0/"> CC BY 3.0</a>
+        </div>
+    </footer>
 {% endblock %}
 
