@@ -15,8 +15,16 @@
                     <strong>错误：</strong>{{ err }}
                 </div>
             {% endif %}
-            <input name="studentID" type="text" class="form-control" placeholder="user name" required autofocus>
-            <input name="password" type="password" class="form-control" placeholder="Password" required>
+            <input name="studentID"
+                   {% if msg %}
+                   value="{{ msg.get("studentID") }}"
+                   {% endif %}
+                   type="text" class="form-control" placeholder="user name" required autofocus>
+            <input name="password"
+                   {% if msg %}
+                   value="{{ msg.get("password") }}"
+                   {% endif %}
+                   type="password" class="form-control" placeholder="Password" required>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             &nbsp;
             <p>没有账户？<a href="/signUp">注册</a></p>

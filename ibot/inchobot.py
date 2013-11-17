@@ -34,7 +34,7 @@ def signIn():
         return redirect(url_for('home_page'))
     else:
         err = u"用户名或者密码错误"
-        return render_template('signIn.html', err=err)
+        return render_template('signIn.html', err=err, msg=request.form)
 
 
 @app.route('/signUp', methods=['POST', 'GET'])
@@ -55,12 +55,12 @@ def signUp():
     thisUser = User.query.filter(User.studentID == studentID).first()
     if thisUser is not None:
         err = u"这个用户名已经被人使用了"
-        return render_template('signUp.html', err=err)
+        return render_template('signUp.html', err=err, msg=request.form)
 
     thisUser = User.query.filter(User.email == email).first()
     if thisUser is not None:
         err = u"这个邮箱地址已经被人使用了"
-        return render_template('signUp.html', err=err)
+        return render_template('signUp.html', err=err, msg=request.form)
     newUser = User(studentID, studentName, password, email, datetime.datetime.today(), type)
     db.session.add(newUser)
     db.session.commit()
@@ -261,10 +261,10 @@ def update_user_data():
     user = User.query.filter(User.email == new_email).first()
     if global_user.password != old_pass:
         err = u'密码不正确'
-        return render_template('update_user_data.html', err=err, global_user=global_user)
+        return render_template('update_user_data.html', err=err, global_user=global_user, msg=request.form)
     if user:
         err = '这个邮箱地址已经被人使用了'
-        return render_template('update_user_data.html', err=err, global_user=global_user)
+        return render_template('update_user_data.html', err=err, global_user=global_user, msg=request.form)
     db.session.query(User).filter(User._id == global_user._id).\
         update({'studentTeacherName': new_name, 'password': new_pass, 'email': new_email})
     db.session.commit()
@@ -280,12 +280,17 @@ def update_assignment(_id):
     if ass.user != global_user:
         return redirect(url_for(home_page))
     if request.method == 'GET':
-        return render_template('update_assignment.html', global_user=global_user)
+        msg = {'description': ass.descriptions, 'name': ass.name, 'fileURL': ass.files_url, 'deadline': ass.deadline}
+        return render_template('update_assignment.html', global_user=global_user, msg=msg)
     name = request.form.get('name')
     description = request.form.get('description')
     file_url = request.form.get('fileURL')
     deadline = request.form.get('deadline')
     deadline = datetime.datetime.today()  # TODO
+    password = request.form.get('password')
+    if password != global_user.password:
+        err = u"密码输入错误"
+        return render_template('update_assignment.html', global_user=global_user, err=err, msg=request.form)
     #Assignment.query.filter(Assignment._id == _id).update({'name': name, 'descriptions': description, 'files_url': file_url, 'deadline': deadline})
     ass = Assignment.query.filter(Assignment._id == _id)
     ass.update({'name': name, 'descriptions': description, 'files_url': file_url, 'deadline': deadline})
