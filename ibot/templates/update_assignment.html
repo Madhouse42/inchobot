@@ -1,40 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form class="form-signin" method="post">
-            <h2 class="form-signin-heading">修改作业信息</h2>
-            {% if err %}
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <strong>错误：</strong>{{ err }}
+<div class="container">
+    <div class="page-header">
+        <h2>学委Bot-修改作业</h2>
+    </div>
+    <form class="form-signin" method="post">
+        {% if err %}
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <strong>错误：</strong>{{ err }}
+            </div>
+        {% endif %}
+        <div class="input-group">
+            <span class="input-group-addon">作业名称</span>
+            <input name="name" {% if msg %}value="{{ msg.get('name', '') }}" {% endif %}type="text" class="form-control" placeholder="作业名称" required autofocus>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">作业描述</span>
+            <textarea class="form-control" rows="3" name="description"  type="text" placeholder="作业描述">{% if msg %}{{ msg.get('description', '') }}{% endif %}</textarea>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">资料链接</span>
+            <input name="fileURL" {% if msg %}value="{{ msg.get('fileURL', '') }}" {% endif %}type="text" class="form-control" placeholder="资料链接">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">上交期限</span>
+                <div class="form-control">
+                    <input name="year" {% if msg %}value="{{ msg.get('year', '') }}" {% endif %}type="text">年
+                    <input name="month" {% if msg %}value="{{ msg.get('month', '') }}" {% endif %}type="text">月
+                    <input name="day" {% if msg %}value="{{ msg.get('day', '') }}" {% endif %}type="text">日
+                    <input name="hour" {% if msg %}value="{{ msg.get('hour', '') }}" {% endif %}type="text">时
+                    <input name="minute" {% if msg %}value="{{ msg.get('minute', '') }}" {% endif %}type="text">分
                 </div>
-            {% endif %}
-            <div class="input-group">
-                <span class="input-group-addon">作业名称</span>
-                <input name="name" {% if msg %}value="{{ msg.get('name', '') }}" {% endif %}type="text" class="form-control" placeholder="作业名称" required autofocus>
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">作业描述</span>
-                <textarea class="form-control" rows="3" name="description"  type="text" placeholder="作业描述">{% if msg %}{{ msg.get('description', '') }}{% endif %}</textarea>
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">资料链接</span>
-                <input name="fileURL" {% if msg %}value="{{ msg.get('fileURL', '') }}" {% endif %}type="text" class="form-control" placeholder="资料链接">
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">上交期限</span>
-                    <div class="form-control">
-                        <input name="year" {% if msg %}value="{{ msg.get('year', '') }}" {% endif %}type="text">年
-                        <input name="month" {% if msg %}value="{{ msg.get('month', '') }}" {% endif %}type="text">月
-                        <input name="day" {% if msg %}value="{{ msg.get('day', '') }}" {% endif %}type="text">日
-                        <input name="hour" {% if msg %}value="{{ msg.get('hour', '') }}" {% endif %}type="text">时
-                        <input name="minute" {% if msg %}value="{{ msg.get('minute', '') }}" {% endif %}type="text">分
-                    </div>
-            </div>
-            <div class="input-group">
-                <span class="input-group-addon">密码</span>
-                <input name="password" {% if msg %}value="{{ msg.get('password', '') }}" {% endif %} type="password" class="form-control" placeholder="密码" required>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
-        </form>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">密码</span>
+            <input name="password" {% if msg %}value="{{ msg.get('password', '') }}" {% endif %} type="password" class="form-control" placeholder="密码" required>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">提交</button>
+    </form>
+</div>
 {% endblock %}

@@ -216,7 +216,7 @@ def addAssignment():
 
     if request.method == 'GET':
         today = datetime.datetime.today()
-        msg = {'year': today.year, 'month': today.month, 'day': today.day, 'hour': today.hour, 'minute': today.minute}
+        msg = {'year': today.year, 'month': today.month, 'day': today.day, 'hour': 0, 'minute': 0}
         return render_template('addAssignment.html', global_user=global_user, assignments=asses, msg=msg)
 
     # insert assignment into database here

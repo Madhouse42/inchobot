@@ -43,7 +43,7 @@
                     <tr>
                         <td>{{ submit.assignment_obj.name }}</td>
                         <td>{{ submit.file_submit_name }}</td>
-                        <td>{{ submit.date }}</td>
+                        <td>{{ submit.date.isoformat().split('.')[0].replace('T', ' ') }}</td>
                         <td align="middle">
                             <button class="btn btn-danger" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
                                 删除
@@ -72,8 +72,8 @@
                     {% for ass in global_user.assignments %}
                     <tr>
                         <td>{{ ass.name}}</td>
-                        <td>{{ ass.deadline }}</td>
-                        <td>{{ ass.submit_date }}</td>
+                        <td>{{ ass.deadline.isoformat().split('.')[0].replace('T', ' ') }}</td>
+                        <td>{{ ass.submit_date.isoformat().split('.')[0].replace('T', ' ') }}</td>
                         <td align="middle">
                             <button class="btn btn-success" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
                                 修改

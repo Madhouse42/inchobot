@@ -32,7 +32,7 @@ def get_rest_days(t1, t2=datetime.datetime.today()):
 
 
 def is_dead(t1, t2=datetime.datetime.today()):
-    if (t2 - t1).days > 0:
+    if t2 > t1:
         death = True
     else:
         death = False

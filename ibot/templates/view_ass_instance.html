@@ -43,10 +43,10 @@
         <div class="panel-body">
             {{ ass_instance.descriptions }}
             {% if is_dead(ass_instance.deadline) %}
-                <button class="btn btn-info btn-sm pull-right"
+                <!--button class="btn btn-info btn-sm pull-right"
                         onclick="append_ass()">
                     创建补交作业项目
-                </button>
+                </button-->
             {% endif %}
         </div>
     </div>
@@ -133,7 +133,7 @@
                 <li class="list-group-item">
                     <h5 class="list-group-item-heading">
                         <small class="list-group-item-text">
-                            {{ item.date }},&nbsp;
+                            {{ item.date.isoformat().split('.')[0].replace('T', ' ') }},&nbsp;
                             {{ item.user.studentTeacherName }}&nbsp;说
                             {% if global_user._id == item.user._id %}
                                 <button class="btn btn-danger pull-right"
