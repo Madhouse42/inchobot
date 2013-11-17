@@ -10,7 +10,9 @@
     <div class="page-header">
         <h2>
             账户信息
-            <small><a href="/update_user_data">修改</a></small>
+            <button class="btn btn-success pull-right" onclick="update_user_data()">
+            修改
+            </button>
         </h2>
     </div>
     <div class="panel panel-default">
@@ -42,8 +44,8 @@
                         <td>{{ submit.assignment_obj.name }}</td>
                         <td>{{ submit.file_submit_name }}</td>
                         <td>{{ submit.date }}</td>
-                        <td>
-                            <button class="btn btn-danger pull-right" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
+                        <td align="middle">
+                            <button class="btn btn-danger" id="btn-delete-disc-{{ submit._id }}" onclick="delete_submission({{ submit._id }})">
                                 删除
                             </button>
                         </td>
@@ -65,21 +67,20 @@
                     <td>作业名</td>
                     <td>期限</td>
                     <td>提交时间</td>
+                    <td></td>
                 </tr>
                     {% for ass in global_user.assignments %}
                     <tr>
                         <td>{{ ass.name}}</td>
                         <td>{{ ass.deadline }}</td>
                         <td>{{ ass.submit_date }}</td>
-                        <td>
-                            <div class="btn-group pull-right">
-                            <button class="btn btn-danger" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
+                        <td align="middle">
+                            <button class="btn btn-success" id="btn-delete-disc-{{ ass._id }}" onclick="update_assignment({{ ass._id }})">
                                 修改
                             </button>
                             <button class="btn btn-danger" id="btn-delete-disc-{{ ass._id }}" onclick="delete_assignment({{ ass._id }})">
                                 删除
                             </button>
-                            </div>
                         </td>
                     </tr>
                 {% endfor %}

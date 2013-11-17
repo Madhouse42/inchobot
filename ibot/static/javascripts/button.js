@@ -17,3 +17,7 @@ var delete_assignment = function (id) {
 var update_assignment = function(id){
     location.href = '/update_assignment/' + id
 };
+
+var update_user_data = function(){
+    location.href = '/update_user_data'
+};
