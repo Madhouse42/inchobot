@@ -6,12 +6,6 @@ import os
 from ibot import *
 
 
-@app.before_first_request
-def init_db(_=None):
-    """initialize database"""
-    db.create_all()
-
-
 @app.route('/', methods=['POST', 'GET'])
 def home_page():
     thisUser = User.query.filter(User._id == session.get('userID')).first()

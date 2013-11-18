@@ -26,3 +26,7 @@ import jinja_misc
 
 app.jinja_env.globals.update(dict(list_functions(jinja_misc)))
 
+import db_init
+db_init.run()
+db.create_all()
+
