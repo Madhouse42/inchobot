@@ -143,7 +143,7 @@ def view_donate():
     global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if not global_user:
-        return render_template('/')
+        return redirect('/')
     return render_template('donate.html', global_user=global_user)
 
 
@@ -151,7 +151,7 @@ def view_donate():
 def append_discussion():
     global_user = User.query.filter(User._id == session.get('userID')).first()
     if not global_user:
-        return render_template('/')
+        return redirect('/')
 
     ass_id = request.form['ass_id']
     discussion_text = request.form['disc']
