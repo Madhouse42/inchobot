@@ -35,14 +35,14 @@
                     <li class="active"><a href="/addAssignment">添作业</a></li>
                 {% endif %}
 
-                <!-- li class="dropdown">
+                {# <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">近期作业 <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        ##{% for item in assignments %}
+                        {% for item in assignments %}
                             <li><a href="{{ url_for('view_assignment_instance', _id=item._id) }}">{{ item.name }}</a></li>
-                        ##{% endfor %}
+                        {% endfor %}
                     </ul>
-                </li -->
+                </li>  #}
             </ul>
             <form class="navbar-form navbar-left" action="{{ url_for('view_search_result') }}" role="search">
                 <div class="form-group">
@@ -72,10 +72,11 @@
     <footer>
         <div>
             &copy; Copyright 2013,
-            <a href="https://github.com/brickgao"> brickgao</a>
-            <a href="https://github.com/mad4alcohol">mad4alcogol</a>
-            <a href="https://github.com/whuream">whuream</a>
-            in <a href="https://github.com/Madhouse42"> Madhouse42</a>
+            <a href="mailto: brickgao@gmail.com"> brickgao</a>
+            <a href="mailto: chsc4698@gmail.com">mad4alcohol</a>
+            and
+            <a href="mailto: 1069700995@qq.com">whuream</a>
+            in  Madhouse42
         </div>
         <div>
             Buili With

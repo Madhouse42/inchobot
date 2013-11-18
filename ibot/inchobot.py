@@ -31,10 +31,21 @@ def signIn():
     thisUser = User.query.filter(and_(User.studentID == studentID, User.password == password)).first()
     if thisUser is not None:
         session['userID'] = thisUser._id
+        if thisUser.type == 0:
+            return redirect(url_for('admin'))
         return redirect(url_for('home_page'))
     else:
         err = u"用户名或者密码错误"
         return render_template('signIn.html', err=err, msg=request.form)
+
+
+@app.route('/admin', methods=['POST', 'GET'])
+def admin():
+    thisUser = User.query.filter(User._id == session.get('userID')).first()
+    if thisUser.type != 0:
+        return redirect(url_for(home_page))
+    users = User.query.all()
+    return render_template('admin.html', users=users, global_user=thisUser)
 
 
 @app.route('/signUp', methods=['POST', 'GET'])
@@ -112,7 +123,9 @@ def view_assignment_instance(_id):
 
 @app.route('/search_result', methods=['GET'])
 def view_search_result():
-    keyword = request.args.get('keyword')
+    keyword = request.args.get('keyword', '')
+    if keyword == '':
+        return redirect('/')
     asses = Assignment.query.filter(Assignment.name.like('%%%s%%' % keyword))\
                                         .order_by(Assignment.deadline.desc())
 
@@ -347,6 +360,7 @@ def delete_submission():
 
     return render_template('thisUserData.html', global_user=global_user)
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0')
 
