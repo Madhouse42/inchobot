@@ -185,7 +185,7 @@ def upload():
     global_user = User.query.filter(User._id == session['userID']).first()
     if not global_user:
         return redirect('/')
-    print request.form
+    #print request.form
     f = request.files.get('file')
     if not f:
         err = u"上传文件失败"
