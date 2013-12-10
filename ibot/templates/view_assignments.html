@@ -14,7 +14,7 @@
     {% for item in assignments%}
     <tr>
         <td><a href="{{ url_for('view_assignment_instance', _id=item._id) }}">{{ item.name }}</a></td>
-        <td>{{ item.name }}</td>
+        <td>{{ item.user.studentTeacherName }}</td>
         <td>
             <span class="label {{ get_color_from_timedelta(item.deadline) }}">
                 {%- if is_dead(item.deadline) -%}

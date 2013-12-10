@@ -110,7 +110,7 @@ def view_assignment_instance(_id):
     global_user = User.query.filter(User._id == session.get('userID')).first()
 
     if global_user:
-        return render_template('view_ass_instance.html', assignments=asses, ass_instance=ass, global_user = global_user)
+        return render_template('view_ass_instance.html', ass_instance=ass, global_user = global_user)
     else:
         return redirect('/')
 
@@ -356,5 +356,5 @@ def delete_submission():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
 

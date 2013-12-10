@@ -27,9 +27,11 @@
                            {{ ass_instance.user.email }}
                  </a>
             </small>
+            {% if ass_instance.user == global_user %}
             <button class="btn btn-success pull-right" id="btn-delete-disc-{{ ass_instance._id }}" onclick="update_assignment({{ ass_instance._id }})">
                  修改
             </button>
+            {% endif %}
         </h2>
     </div>
 
