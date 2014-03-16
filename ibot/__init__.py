@@ -1,14 +1,15 @@
 # encoding: utf-8
-import inspect
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bootstrap import Bootstrap
+
 from ibot.misc import list_functions
+
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bot_data.db'
-app.config['SECRET_KEY'] = 'fuck'
+app.config['SECRET_KEY'] = 'kami'
 
 Bootstrap(app)
 
