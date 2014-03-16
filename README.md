@@ -20,6 +20,7 @@ InchoBot is a web bot helps teachers and assistants gathering students' homework
 1. Change `app.config['SECRET_KEY'] = 'kami'` to `app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'` in `ibot/__init__.py`.
 1. Change `kami = User('-', 'kami', '-', '-', datetime.datetime.today(), 0)` to `kami = User('ADMINISTRATOR_ID', 'ADMINISTRATOR_NAME', 'ADMINISTRATOR_PASS', 'ADMINISTRATOR_ENAMI', datetime.datetime.today(), 0)` in `db_init.py`.
 1. Run `db_init.py` to initialize database.
+1. Set `inchobot.app.run(debug=True)` to debug in `main.py` or Set `inchobot.app.run(host='0.0.0.0')` to put into use.
 1. Run `main.py` to start web server.
 
 ## Snapshot
