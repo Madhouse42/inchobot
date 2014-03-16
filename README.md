@@ -15,6 +15,13 @@ InchoBot is a web bot helps teachers and assistants gathering students' homework
 *   Students can view, discuss and submit homework.
 *   All files will be packaged and sent to teacher's email at the deadline.(TODO)
 
+## Usage
+
+1. Change `app.config['SECRET_KEY'] = 'kami'` to `app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'` in `ibot/__init__.py`.
+1. Change `kami = User('-', 'kami', '-', '-', datetime.datetime.today(), 0)` to `kami = User('ADMINISTRATOR_ID', 'ADMINISTRATOR_NAME', 'ADMINISTRATOR_PASS', 'ADMINISTRATOR_ENAMI', datetime.datetime.today(), 0)` in `db_init.py`.
+1. Run `db_init.py` to initialize database.
+1. Run `main.py` to start web server.
+
 ## Snapshot
 
 *   
@@ -32,6 +39,7 @@ InchoBot is a web bot helps teachers and assistants gathering students' homework
         ![Teacher user profile](./img/t-user.png)
         
 *   
+
     ### Student `超威蓝猫`
     
     *   view assignments
@@ -43,6 +51,12 @@ InchoBot is a web bot helps teachers and assistants gathering students' homework
         
     *   user profile
         ![Student user profile](./img/s-user.png)
+
+*   
+
+    ### Administrator `kami`
+    
+    ![administrator](./img/admin.png)
     
     
     
