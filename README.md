@@ -1,6 +1,6 @@
 ﻿## InchoBot ##
 
-InchoBot is a web bot helps teachers and assistants gathering students' homework (electronic version).
+InchoBot is a web app which targets in helping teachers and TAs gathering students' homework.
 
 ## Dependencies
 
@@ -9,21 +9,21 @@ InchoBot is a web bot helps teachers and assistants gathering students' homework
 *   flask-sqlalchemy
 *   flask-bootstrap
 
-## Feathers
+## Features
 
-*   Teachers and assistants can assign homework.
+*   Teachers and TAs can make homework assignments.
 *   Students can view, discuss and submit homework.
-*   All files will be packaged and sent to teacher's email at the deadline.(TODO)
+*   All files will be packaged and sent to teacher's email before the set deadline.(TODO)
 
 ## Usage
 
 1. Change `app.config['SECRET_KEY'] = 'kami'` to `app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'` in `ibot/__init__.py`.
 1. Change `kami = User('-', 'kami', '-', '-', datetime.datetime.today(), 0)` to `kami = User('ADMINISTRATOR_ID', 'ADMINISTRATOR_NAME', 'ADMINISTRATOR_PASS', 'ADMINISTRATOR_ENAMI', datetime.datetime.today(), 0)` in `db_init.py`.
 1. Run `db_init.py` to initialize database.
-1. Set `inchobot.app.run(debug=True)` to debug in `main.py` or set `inchobot.app.run(host='0.0.0.0')` to put into use.
+1. Set `inchobot.app.run(debug=True)` in `main.py` for dev environment or set `inchobot.app.run(host='0.0.0.0')` for production environment.
 1. Run `main.py` to start web server.
 
-## Snapshot
+## Screenshots
 
 *   
 
